@@ -103,12 +103,13 @@ const ChartPage = props => {
             </Typography>
             <Typography component="p">100,000,000 vnđ</Typography>
           </Paper>
+          <br />
           <Paper
             className={classes.root}
             style={{
               backgroundColor: "#fbfefe",
               backgroundImage:
-                "linear-gradient(to right, rgba(255,0,0,0), rgba(255,0,0,1))",
+                "linear-gradient(to right, #ff8177 0%, #ff867a 0%, #ff8c7f 21%, #f99185 52%, #cf556c 78%, #b12a5b 100%)",
               color: "#fbfefe",
               boxShadow: "none"
             }}
