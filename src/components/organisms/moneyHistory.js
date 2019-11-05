@@ -10,7 +10,6 @@ import Chip from "@material-ui/core/Chip";
 
 const useStyles = makeStyles({
   root: {
-    height: 500,
     width: "100%",
     overflow: "auto"
   }

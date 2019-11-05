@@ -1,128 +1,69 @@
 import React from "react";
-import Chart from "react-google-charts";
-import EqualizerIcon from "@material-ui/icons/Equalizer";
-import Button from "@material-ui/core/Button";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
-import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+import SwipeableViews from "react-swipeable-views";
+import PropTypes from "prop-types";
 import Typography from "@material-ui/core/Typography";
+import DynamicImport from "../../utils/lazyImport";
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    padding: theme.spacing(3, 2)
-  }
-}));
+const MonthChart = DynamicImport(() => import("../templates/monthChart"));
+const DayChart = DynamicImport(() => import("../templates/dayChart"));
 
-const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-const ChartPage = props => {
-  const classes = useStyles();
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [mon, setMon] = React.useState(null);
-
-  const handleClick = event => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
   return (
-    <>
-      <Button
-        aria-controls="simple-menu"
-        aria-haspopup="true"
-        onClick={handleClick}
-      >
-        {mon ? "Tháng " + mon : "Chọn tháng cần xem báo cáo"}
-      </Button>
-      <Menu
-        id="simple-menu"
-        anchorEl={anchorEl}
-        keepMounted
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-      >
-        {months.map(i => (
-          <MenuItem
-            onClick={() => {
-              setMon(i);
-              handleClose();
-            }}
-          >
-            Tháng {i}
-          </MenuItem>
-        ))}
-      </Menu>
-      <br />
-      <EqualizerIcon style={{ color: "blue" }} /> Tiền thu
-      <EqualizerIcon style={{ color: "red" }} /> Tiền chi
-      {mon && (
-        <>
-          <Chart
-            chartType="BarChart"
-            loader={<div>Loading Chart</div>}
-            data={[
-              ["1/20", "Thu", "Chi"],
-              ["1/10", 175000, 1008000],
-              ["2/10", 175000, 1008000],
-              ["3/10", 175000, 1008000],
-              ["4/10", 175000, 1008000],
-              ["5/10", 175000, 1008000],
-              ["6/10", 175000, 1008000],
-              ["7/10", 175000, 1008000]
-            ]}
-            options={{
-              title: "Thống kê tháng " + mon,
-              hAxis: {
-                title: "Số tiền",
-                minValue: 0
-              },
-              vAxis: {
-                title: "City"
-              },
-              height: 500,
-              bar: { groupWidth: "100%" },
-              legend: { position: "none" }
-            }}
-            rootProps={{ "data-testid": "1" }}
-          />
-          <Paper
-            className={classes.root}
-            style={{
-              backgroundColor: "#44cbdf",
-              backgroundImage:
-                "linear-gradient(141deg,  #44cbdf 15%, #01ca7c 85%)",
-              color: "#fbfefe",
-              boxShadow: "none"
-            }}
-          >
-            <Typography variant="h5" component="h3">
-              Tổng thu nhập tháng {mon}
-            </Typography>
-            <Typography component="p">100,000,000 vnđ</Typography>
-          </Paper>
-          <br />
-          <Paper
-            className={classes.root}
-            style={{
-              backgroundColor: "#fbfefe",
-              backgroundImage:
-                "linear-gradient(to right, #ff8177 0%, #ff867a 0%, #ff8c7f 21%, #f99185 52%, #cf556c 78%, #b12a5b 100%)",
-              color: "#fbfefe",
-              boxShadow: "none"
-            }}
-          >
-            <Typography variant="h5" component="h3">
-              Tổng chi tiêu tháng {mon}
-            </Typography>
-            <Typography component="p">500,000,000 vnđ</Typography>
-          </Paper>
-        </>
-      )}
-    </>
+    <Typography
+      component="div"
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {children}
+    </Typography>
   );
+}
+
+TabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.any.isRequired,
+  value: PropTypes.any.isRequired
 };
 
-export default ChartPage;
+export default function ChartPage() {
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  const handleChangeIndex = index => {
+    setValue(index);
+  };
+
+  return (
+    <Paper square>
+      <Tabs
+        variant="fullWidth"
+        value={value}
+        indicatorColor="primary"
+        onChange={handleChange}
+        aria-label="disabled tabs example"
+      >
+        <Tab label="Xem theo tháng" />
+        <Tab label="Xem theo ngày" />
+      </Tabs>
+      <SwipeableViews index={value} onChangeIndex={handleChangeIndex}>
+        <TabPanel value={value} index={0}>
+          <MonthChart />
+        </TabPanel>
+        <TabPanel value={value} index={1}>
+          <DayChart />
+        </TabPanel>
+      </SwipeableViews>
+    </Paper>
+  );
+}

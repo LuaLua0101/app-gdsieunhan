@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { GlobalStateProvider } from "./Store";
-import DynamicImport from "./utils/lazyImport";
 import "./utils/firebase";
 import RouteMap from "./Route";
-import { BrowserRouter as Router } from "react-router-dom";
+import { BrowserRouter as Router, Link } from "react-router-dom";
 import {
   createMuiTheme,
   makeStyles,
@@ -23,6 +22,7 @@ import List from "@material-ui/core/List";
 import InboxIcon from "@material-ui/icons/MoveToInbox";
 import Grid from "@material-ui/core/Grid";
 import Divider from "@material-ui/core/Divider";
+import AssignmentIcon from "@material-ui/icons/Assignment";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -88,7 +88,9 @@ const App = () => {
           <ListItemIcon>
             <InboxIcon />
           </ListItemIcon>
-          <ListItemText primary="Thống kê thu chi" />
+          <Link to="/chart">
+            <ListItemText primary="Thống kê thu chi" />
+          </Link>
         </ListItem>
         <Divider />
         <ListItem>
@@ -129,9 +131,9 @@ const App = () => {
                   <MenuIcon />
                 </IconButton>
                 <Typography variant="h6" className={classes.title}>
-                  {/* Hà siêu nhân */}
+                  <AssignmentIcon /> Chi tiêu
                 </Typography>
-                <Button color="inherit">cô Hà hâm</Button>
+                {/* <Button color="inherit">cô Hà hâm</Button> */}
               </Toolbar>
             </AppBar>
             <Grid item xs={12}>
