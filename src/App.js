@@ -23,6 +23,7 @@ import InboxIcon from "@material-ui/icons/MoveToInbox";
 import Grid from "@material-ui/core/Grid";
 import Divider from "@material-ui/core/Divider";
 import AssignmentIcon from "@material-ui/icons/Assignment";
+import { SnackbarProvider, useSnackbar } from "notistack";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -77,13 +78,15 @@ const App = () => {
       }}
     >
       <List>
-        {/* <ListItem>
+        <ListItem>
           <ListItemIcon>
             <InboxIcon />
           </ListItemIcon>
-          <ListItemText primary="Danh sách học sinh" />
+          <Link to="/">
+            <ListItemText primary="Thêm giao dịch" />
+          </Link>
         </ListItem>
-        <Divider /> */}
+        <Divider />
         <ListItem>
           <ListItemIcon>
             <InboxIcon />
@@ -106,49 +109,51 @@ const App = () => {
   return (
     <GlobalStateProvider>
       <ThemeProvider theme={theme}>
-        <Router>
-          <div className={classes.root}>
-            <AppBar
-              position="static"
-              style={{
-                backgroundColor: "#44cbdf",
-                backgroundImage:
-                  "linear-gradient(141deg,  #44cbdf 15%, #01ca7c 85%)",
-                color: "#fbfefe",
-                boxShadow: "none"
-              }}
-            >
-              <Toolbar>
-                <IconButton
-                  edge="start"
-                  className={classes.menuButton}
-                  color="inherit"
-                  aria-label="menu"
-                  onClick={() => {
-                    setMenu(true);
-                  }}
-                >
-                  <MenuIcon />
-                </IconButton>
-                <Typography variant="h6" className={classes.title}>
-                  <AssignmentIcon /> Chi tiêu
-                </Typography>
-                {/* <Button color="inherit">cô Hà hâm</Button> */}
-              </Toolbar>
-            </AppBar>
-            <Grid item xs={12}>
-              <RouteMap />
-            </Grid>
-            <Drawer
-              open={menu}
-              onClose={() => {
-                setMenu(false);
-              }}
-            >
-              {sideList("left")}
-            </Drawer>
-          </div>
-        </Router>
+        <SnackbarProvider maxSnack={3} autoHideDuration={1000}>
+          <Router>
+            <div className={classes.root}>
+              <AppBar
+                position="static"
+                style={{
+                  backgroundColor: "#44cbdf",
+                  backgroundImage:
+                    "linear-gradient(141deg,  #44cbdf 15%, #01ca7c 85%)",
+                  color: "#fbfefe",
+                  boxShadow: "none"
+                }}
+              >
+                <Toolbar>
+                  <IconButton
+                    edge="start"
+                    className={classes.menuButton}
+                    color="inherit"
+                    aria-label="menu"
+                    onClick={() => {
+                      setMenu(true);
+                    }}
+                  >
+                    <MenuIcon />
+                  </IconButton>
+                  <Typography variant="h6" className={classes.title}>
+                    <AssignmentIcon /> Chi tiêu
+                  </Typography>
+                  {/* <Button color="inherit">cô Hà hâm</Button> */}
+                </Toolbar>
+              </AppBar>
+              <Grid item xs={12}>
+                <RouteMap />
+              </Grid>
+              <Drawer
+                open={menu}
+                onClose={() => {
+                  setMenu(false);
+                }}
+              >
+                {sideList("left")}
+              </Drawer>
+            </div>
+          </Router>
+        </SnackbarProvider>
       </ThemeProvider>
     </GlobalStateProvider>
   );

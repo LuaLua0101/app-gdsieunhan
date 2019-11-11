@@ -1,9 +1,14 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Fab from "@material-ui/core/Fab";
 import NavigationIcon from "@material-ui/icons/Done";
 import Chip from "@material-ui/core/Chip";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import useFormInput from "../../utils/useFormNumber";
+import { useSnackbar } from "notistack";
+
+const notes = ["Đi chợ", "Mua linh tinh", "Lý do khác"];
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -20,6 +25,9 @@ const useStyles = makeStyles(theme => ({
   },
   extendedIcon: {
     marginRight: theme.spacing(1)
+  },
+  close: {
+    padding: theme.spacing(0.5)
   }
 }));
 
@@ -31,21 +39,60 @@ const moneyArr = [
   { number: 500000, label: "500k", color: "#01ca7c" }
 ];
 
+const formatMoney = money => {
+  return money.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+};
+
 const MoneyInput = props => {
+  const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
+  const [note, setNote] = useState([]);
+  const fee = useFormInput("");
+
+  const handleClickVariant = variant => () => {
+    // variant could be success, error, warning, info, or default
+    enqueueSnackbar(
+      props.in ? "Xác nhận thu thành công!" : "Xác nhận chi thành công!",
+      { variant }
+    );
+  };
 
   return (
     <>
       <form className={classes.container} noValidate autoComplete="off">
-        <TextField
-          id="outlined-basic"
+        <Autocomplete
+          freeSolo
           className={classes.textField}
-          label={props.in ? "Nhập số tiền đã thu" : "Nhập số tiền đã chi"}
-          margin="normal"
-          variant="outlined"
-          type="number"
+          options={note}
+          {...fee}
+          renderInput={params => (
+            <TextField
+              {...params}
+              label="Số tiền"
+              margin="normal"
+              variant="outlined"
+              fullWidth
+              onChange={e => {
+                const value = parseInt(e.target.value.replace(/,/g, ""));
+                fee.setValue(formatMoney(value));
+              }}
+            />
+          )}
         />
-
+        <Autocomplete
+          freeSolo
+          className={classes.textField}
+          options={notes.map(option => option)}
+          renderInput={params => (
+            <TextField
+              {...params}
+              label="Ghi chú"
+              margin="normal"
+              variant="outlined"
+              fullWidth
+            />
+          )}
+        />
         <Fab
           variant="extended"
           size="medium"
@@ -59,18 +106,19 @@ const MoneyInput = props => {
             color: "#fbfefe",
             boxShadow: "none"
           }}
+          onClick={handleClickVariant(props.in ? "success" : "warning")}
         >
           <NavigationIcon className={classes.extendedIcon} />
           {props.in ? "Xác nhận thu" : "Xác nhận chi"}
         </Fab>
       </form>
-      {moneyArr.map(i => (
+      {/* {moneyArr.map(i => (
         <Chip
           style={{ margin: 5, backgroundColor: i.color, color: "#fbfefe" }}
           label={i.label}
           size="small"
         />
-      ))}
+      ))} */}
     </>
   );
 };

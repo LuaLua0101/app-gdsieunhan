@@ -5,9 +5,10 @@ const useFormNumber = (init = "") => {
 
   function handleChange(e) {
     if (typeof e == "string") {
-      if (!/[a-z]/.test(e.toLowerCase())) setValue(e);
+      if (e && !/[a-z]/.test(e.toLowerCase())) setValue(e);
     } else {
-      if (!/[a-z]/.test(e.target.value.toLowerCase())) setValue(e.target.value);
+      if (e.target.value && !/[a-z]/.test(e.target.value.toLowerCase()))
+        setValue(e.target.value);
     }
   }
 
