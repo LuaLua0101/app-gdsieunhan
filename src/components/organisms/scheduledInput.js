@@ -7,7 +7,14 @@ import Chip from "@material-ui/core/Chip";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import useFormInput from "../../utils/useFormNumber";
 import { useSnackbar } from "notistack";
-
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormControl from "@material-ui/core/FormControl";
+import FormLabel from "@material-ui/core/FormLabel";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
 const notes = ["Đi chợ", "Mua linh tinh", "Lý do khác"];
 
 const useStyles = makeStyles(theme => ({
@@ -28,16 +35,12 @@ const useStyles = makeStyles(theme => ({
   },
   close: {
     padding: theme.spacing(0.5)
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    width: "100%"
   }
 }));
-
-const moneyArr = [
-  { number: 20000, label: "20k", color: "#359aca" },
-  { number: 50000, label: "50k", color: "#54afcd" },
-  { number: 100000, label: "100k", color: "#72c4d0" },
-  { number: 200000, label: "200k", color: "#91d9d3" },
-  { number: 500000, label: "500k", color: "#01ca7c" }
-];
 
 const formatMoney = money => {
   return money
@@ -45,23 +48,49 @@ const formatMoney = money => {
     : "";
 };
 
-const MoneyInput = props => {
+const ScheduledInput = props => {
   const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
   const [note, setNote] = useState([]);
   const fee = useFormInput("");
+  const [value, setValue] = useState("female");
+  const [date, setDate] = useState(0);
+
+  const inputLabel = React.useRef(null);
+  const [labelWidth, setLabelWidth] = React.useState(0);
+  React.useEffect(() => {
+    setLabelWidth(inputLabel.current.offsetWidth);
+  }, []);
+
+  const handleChange = event => {
+    setValue(event.target.value);
+  };
+
+  const handleChangeDate = event => {
+    setDate(event.target.value);
+  };
 
   const handleClickVariant = variant => () => {
-    // variant could be success, error, warning, info, or default
-    enqueueSnackbar(
-      props.in ? "Xác nhận thu thành công!" : "Xác nhận chi thành công!",
-      { variant }
-    );
+    enqueueSnackbar("Xác nhận chi thành công!", { variant });
   };
 
   return (
     <>
       <form className={classes.container} noValidate autoComplete="off">
+        <RadioGroup name="gender1" value={value} onChange={handleChange} row>
+          <FormControlLabel
+            labelPlacement="start"
+            label="Thu"
+            value="female"
+            control={<Radio />}
+          />
+          <FormControlLabel
+            labelPlacement="start"
+            label="Chi"
+            value="male"
+            control={<Radio />}
+          />
+        </RadioGroup>
         <Autocomplete
           freeSolo
           className={classes.textField}
@@ -95,6 +124,22 @@ const MoneyInput = props => {
             />
           )}
         />
+        <FormControl variant="outlined" className={classes.formControl}>
+          <InputLabel ref={inputLabel} id="demo-simple-select-outlined-label">
+            Ngày lên lịch
+          </InputLabel>
+          <Select
+            labelId="demo-simple-select-outlined-label"
+            id="demo-simple-select-outlined"
+            value={date}
+            onChange={handleChangeDate}
+            labelWidth={labelWidth}
+          >
+            <MenuItem value={0}>Hàng ngày</MenuItem>
+            <MenuItem value={1}>Đầu tháng</MenuItem>
+            <MenuItem value={2}>Giữa tháng</MenuItem>
+          </Select>
+        </FormControl>
         <Fab
           variant="extended"
           size="medium"
@@ -111,18 +156,11 @@ const MoneyInput = props => {
           onClick={handleClickVariant(props.in ? "success" : "warning")}
         >
           <NavigationIcon className={classes.extendedIcon} />
-          {props.in ? "Xác nhận thu" : "Xác nhận chi"}
+          Xác nhận thêm
         </Fab>
       </form>
-      {/* {moneyArr.map(i => (
-        <Chip
-          style={{ margin: 5, backgroundColor: i.color, color: "#fbfefe" }}
-          label={i.label}
-          size="small"
-        />
-      ))} */}
     </>
   );
 };
 
-export default MoneyInput;
+export default ScheduledInput;

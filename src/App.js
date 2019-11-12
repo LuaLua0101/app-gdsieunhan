@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { GlobalStateProvider } from "./Store";
 import "./utils/firebase";
 import RouteMap from "./Route";
-import { BrowserRouter as Router, Link } from "react-router-dom";
+import { BrowserRouter as Router, Link as ReactLink } from "react-router-dom";
 import {
   createMuiTheme,
   makeStyles,
@@ -11,7 +11,6 @@ import {
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import Drawer from "@material-ui/core/Drawer";
@@ -23,11 +22,27 @@ import InboxIcon from "@material-ui/icons/MoveToInbox";
 import Grid from "@material-ui/core/Grid";
 import Divider from "@material-ui/core/Divider";
 import AssignmentIcon from "@material-ui/icons/Assignment";
-import { SnackbarProvider, useSnackbar } from "notistack";
+import { SnackbarProvider } from "notistack";
+import { withGetScreen } from "react-getscreen";
+import styled from "styled-components";
+
+const Link = styled(ReactLink)`
+  text-decoration: none;
+  color: white;
+  &:hover {
+    color: black;
+  }
+`;
 
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1
+  },
+  rootPC: {
+    flexGrow: 1,
+    width: 500,
+    marginLeft: "auto",
+    marginRight: "auto"
   },
   menuButton: {
     marginRight: theme.spacing(2)
@@ -49,9 +64,15 @@ const theme = createMuiTheme({
   }
 });
 
-const App = () => {
+const App = props => {
   const classes = useStyles();
   const [menu, setMenu] = useState(false);
+
+  useEffect(() => {
+    if (props.isMobile()) console.log("mobile");
+    else if (props.isTablet()) console.log("isTablet");
+    else console.log("isPC");
+  }, []);
 
   const toggleDrawer = (side, open) => event => {
     if (
@@ -91,8 +112,26 @@ const App = () => {
           <ListItemIcon>
             <InboxIcon />
           </ListItemIcon>
+          <Link to="/scheduled">
+            <ListItemText primary="Giao dịch cố định" />
+          </Link>
+        </ListItem>
+        <Divider />
+        <ListItem>
+          <ListItemIcon>
+            <InboxIcon />
+          </ListItemIcon>
           <Link to="/chart">
             <ListItemText primary="Thống kê thu chi" />
+          </Link>
+        </ListItem>
+        <Divider />
+        <ListItem>
+          <ListItemIcon>
+            <InboxIcon />
+          </ListItemIcon>
+          <Link to="/students">
+            <ListItemText primary="Danh sách học sinh" />
           </Link>
         </ListItem>
         <Divider />
@@ -111,7 +150,13 @@ const App = () => {
       <ThemeProvider theme={theme}>
         <SnackbarProvider maxSnack={3} autoHideDuration={1000}>
           <Router>
-            <div className={classes.root}>
+            <div
+              className={
+                props.isMobile() || props.isTablet()
+                  ? classes.root
+                  : classes.rootPC
+              }
+            >
               <AppBar
                 position="static"
                 style={{
@@ -159,4 +204,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default withGetScreen(App);
