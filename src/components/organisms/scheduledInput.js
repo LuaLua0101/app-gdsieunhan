@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Fab from "@material-ui/core/Fab";
 import NavigationIcon from "@material-ui/icons/Done";
-import Chip from "@material-ui/core/Chip";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import useFormInput from "../../utils/useFormNumber";
 import { useSnackbar } from "notistack";
@@ -11,7 +10,7 @@ import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
-import FormLabel from "@material-ui/core/FormLabel";
+import InputAdornment from "@material-ui/core/InputAdornment";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
@@ -106,6 +105,11 @@ const ScheduledInput = props => {
               onChange={e => {
                 const value = parseInt(e.target.value.replace(/,/g, ""));
                 fee.setValue(formatMoney(value));
+              }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">VNĐ</InputAdornment>
+                )
               }}
             />
           )}

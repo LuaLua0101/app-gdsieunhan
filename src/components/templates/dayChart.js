@@ -46,22 +46,24 @@ export default function DayChart() {
             "aria-label": "change date"
           }}
         />
-        <Fab
-          variant="extended"
-          size="medium"
-          color="primary"
-          aria-label="add"
-          style={{
-            backgroundColor: "#44cbdf",
-            backgroundImage:
-              "linear-gradient(141deg,  #44cbdf 15%, #01ca7c 85%)",
-            color: "#fbfefe",
-            boxShadow: "none"
-          }}
-        >
-          <SearchIcon /> Xem lịch sử
-        </Fab>
       </Grid>
+      <Fab
+        variant="extended"
+        size="medium"
+        color="primary"
+        aria-label="add"
+        style={{
+          display: "flex",
+          marginLeft: "auto",
+          marginRight: "auto",
+          backgroundColor: "#44cbdf",
+          backgroundImage: "linear-gradient(141deg,  #44cbdf 15%, #01ca7c 85%)",
+          color: "#fbfefe",
+          boxShadow: "none"
+        }}
+      >
+        <SearchIcon /> Xem lịch sử
+      </Fab>
       <History />
     </MuiPickersUtilsProvider>
   );

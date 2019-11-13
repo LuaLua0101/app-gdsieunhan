@@ -180,7 +180,7 @@ const App = props => {
                     <MenuIcon />
                   </IconButton>
                   <Typography variant="h6" className={classes.title}>
-                    <AssignmentIcon /> Chi tiêu
+                    Quản lý lớp học
                   </Typography>
                   {/* <Button color="inherit">cô Hà hâm</Button> */}
                 </Toolbar>

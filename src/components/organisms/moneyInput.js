@@ -3,11 +3,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Fab from "@material-ui/core/Fab";
 import NavigationIcon from "@material-ui/icons/Done";
-import Chip from "@material-ui/core/Chip";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import useFormInput from "../../utils/useFormNumber";
 import { useSnackbar } from "notistack";
-
+import InputAdornment from "@material-ui/core/InputAdornment";
 const notes = ["Đi chợ", "Mua linh tinh", "Lý do khác"];
 
 const useStyles = makeStyles(theme => ({
@@ -77,6 +76,11 @@ const MoneyInput = props => {
               onChange={e => {
                 const value = parseInt(e.target.value.replace(/,/g, ""));
                 fee.setValue(formatMoney(value));
+              }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">VNĐ</InputAdornment>
+                )
               }}
             />
           )}
