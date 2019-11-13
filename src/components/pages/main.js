@@ -6,7 +6,6 @@ import SwipeableViews from "react-swipeable-views";
 import PropTypes from "prop-types";
 import Typography from "@material-ui/core/Typography";
 import DynamicImport from "../../utils/lazyImport";
-import Divider from "@material-ui/core/Divider";
 
 const MoneyInput = DynamicImport(() => import("../organisms/moneyInput"));
 const MoneyHistory = DynamicImport(() => import("../organisms/moneyHistory"));

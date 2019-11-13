@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Fab from "@material-ui/core/Fab";
 import NavigationIcon from "@material-ui/icons/Done";
-import Chip from "@material-ui/core/Chip";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import useFormInput from "../../utils/useFormNumber";
 import { useSnackbar } from "notistack";
@@ -14,9 +13,9 @@ import "date-fns";
 import DateFnsUtils from "@date-io/date-fns";
 import {
   MuiPickersUtilsProvider,
-  KeyboardTimePicker,
   KeyboardDatePicker
 } from "@material-ui/pickers";
+import InputAdornment from "@material-ui/core/InputAdornment";
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -105,7 +104,13 @@ const StudentInput = props => {
         <TextField
           label="Số điện thoại liên hệ"
           margin="normal"
+          type="number"
           variant="outlined"
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">(+84) </InputAdornment>
+            )
+          }}
           className={classes.textField}
         />
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -130,6 +135,11 @@ const StudentInput = props => {
           renderInput={params => (
             <TextField
               {...params}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">VNĐ</InputAdornment>
+                )
+              }}
               label="Học phí"
               margin="normal"
               variant="outlined"
@@ -146,6 +156,9 @@ const StudentInput = props => {
           margin="normal"
           variant="outlined"
           className={classes.textField}
+          multiline={true}
+          rows={2}
+          rowsMax={4}
         />
         <Fab
           variant="extended"
