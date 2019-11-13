@@ -147,11 +147,7 @@ const App = props => {
         <SnackbarProvider maxSnack={3} autoHideDuration={1000}>
           <Router>
             <div
-              className={
-                props.isMobile() || props.isTablet()
-                  ? classes.root
-                  : classes.root
-              }
+              className={classes.root}
             >
               <AppBar
                 position="static"
