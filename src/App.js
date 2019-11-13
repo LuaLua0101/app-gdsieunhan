@@ -68,11 +68,7 @@ const App = props => {
   const classes = useStyles();
   const [menu, setMenu] = useState(false);
 
-  useEffect(() => {
-    if (props.isMobile()) console.log("mobile");
-    else if (props.isTablet()) console.log("isTablet");
-    else console.log("isPC");
-  }, []);
+  
 
   const toggleDrawer = (side, open) => event => {
     if (
@@ -154,7 +150,7 @@ const App = props => {
               className={
                 props.isMobile() || props.isTablet()
                   ? classes.root
-                  : classes.rootPC
+                  : classes.root
               }
             >
               <AppBar
