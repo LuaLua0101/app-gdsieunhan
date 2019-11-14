@@ -11,8 +11,6 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
 
@@ -55,14 +53,15 @@ const StudentList = () => {
 
   return (
     <Paper className={classes.root}>
-      <Table className={classes.table} aria-label="simple table">
+      <Table>
         <TableHead
           style={{
             backgroundColor: "#44cbdf",
             backgroundImage:
               "linear-gradient(141deg,  #44cbdf 15%, #01ca7c 85%)",
             color: "#fbfefe",
-            boxShadow: "none"
+            boxShadow: "none",
+            borderRadius: 0
           }}
         >
           <TableRow>

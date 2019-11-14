@@ -6,8 +6,7 @@ import {
   VerticalGridLines,
   HorizontalGridLines,
   VerticalBarSeries,
-  LabelSeries,
-  DiscreteColorLegend
+  LabelSeries
 } from "react-vis";
 import EqualizerIcon from "@material-ui/icons/Equalizer";
 import Button from "@material-ui/core/Button";
@@ -180,41 +179,6 @@ const MonthChart = props => {
                   { x: "29/10", y: 5 },
                   { x: "30/10", y: 15 }
                 ]}
-              />
-              <LabelSeries
-                data={[
-                  { x: "1/10", y: 10 },
-                  { x: "2/10", y: 5 },
-                  { x: "3/10", y: 15 },
-                  { x: "4/10", y: 10 },
-                  { x: "5/10", y: 5 },
-                  { x: "6/10", y: 15 },
-                  { x: "7/10", y: 10 },
-                  { x: "8/10", y: 5 },
-                  { x: "9/10", y: 15 },
-                  { x: "10/10", y: 10 },
-                  { x: "11/10", y: 5 },
-                  { x: "12/10", y: 15 },
-                  { x: "13/10", y: 10 },
-                  { x: "14/10", y: 5 },
-                  { x: "15/10", y: 15 },
-                  { x: "16/10", y: 10 },
-                  { x: "17/10", y: 5 },
-                  { x: "18/10", y: 15 },
-                  { x: "19/10", y: 10 },
-                  { x: "20/10", y: 5 },
-                  { x: "21/10", y: 15 },
-                  { x: "22/10", y: 10 },
-                  { x: "23/10", y: 5 },
-                  { x: "24/10", y: 15 },
-                  { x: "25/10", y: 10 },
-                  { x: "26/10", y: 5 },
-                  { x: "27/10", y: 15 },
-                  { x: "28/10", y: 10 },
-                  { x: "29/10", y: 5 },
-                  { x: "30/10", y: 15 }
-                ]}
-                getLabel={d => d.y}
               />
             </XYPlot>
           </div>

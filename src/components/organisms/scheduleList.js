@@ -62,7 +62,8 @@ export default function ScheduleList() {
             backgroundImage:
               "linear-gradient(141deg,  #44cbdf 15%, #01ca7c 85%)",
             color: "#fbfefe",
-            boxShadow: "none"
+            boxShadow: "none",
+            borderRadius: 0
           }}
         >
           <TableRow>

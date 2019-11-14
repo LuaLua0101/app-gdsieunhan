@@ -68,12 +68,6 @@ const App = props => {
   const classes = useStyles();
   const [menu, setMenu] = useState(false);
 
-  useEffect(() => {
-    if (props.isMobile()) console.log("mobile");
-    else if (props.isTablet()) console.log("isTablet");
-    else console.log("isPC");
-  }, []);
-
   const toggleDrawer = (side, open) => event => {
     if (
       event.type === "keydown" &&
@@ -81,8 +75,7 @@ const App = props => {
     ) {
       return;
     }
-
-    setMenu(true);
+    setMenu(false);
   };
 
   const sideList = side => (

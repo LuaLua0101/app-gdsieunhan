@@ -9,6 +9,7 @@ import DynamicImport from "../../utils/lazyImport";
 
 const MoneyInput = DynamicImport(() => import("../organisms/moneyInput"));
 const MoneyHistory = DynamicImport(() => import("../organisms/moneyHistory"));
+const TypoGreenH5 = DynamicImport(() => import("../atoms/typoGreenH5"));
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -64,9 +65,8 @@ export default function MainFinancial() {
           <MoneyInput in={true} />
         </TabPanel>
       </SwipeableViews>
-      <Typography variant="h5" gutterBottom>
-        Lịch sử thu chi hôm nay
-      </Typography>
+      <br />
+      <TypoGreenH5 text="Lịch sử thu chi hôm nay" />
       <MoneyHistory />
     </Paper>
   );

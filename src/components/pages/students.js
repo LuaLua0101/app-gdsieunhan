@@ -11,6 +11,7 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 const StudentInput = DynamicImport(() => import("../organisms/studentInput"));
 const StudentList = DynamicImport(() => import("../organisms/studentList"));
+const TypoGreenH5 = DynamicImport(() => import("../atoms/typoGreenH5"));
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -55,14 +56,22 @@ const StudentsPage = () => {
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
           id="panel1a-header"
+          style={{
+            backgroundColor: "#fbfefe",
+            backgroundImage:
+              "linear-gradient(to right, #ff8177 0%, #ff867a 0%, #ff8c7f 21%, #f99185 52%, #cf556c 78%, #b12a5b 100%)",
+            color: "#fbfefe",
+            boxShadow: "none",
+            borderRadius: 0
+          }}
         >
-          <Typography className={classes.heading}>Thêm học sinh mới</Typography>
+          <Typography className={classes.heading}>Thêm học sinh</Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
           <StudentInput />
         </ExpansionPanelDetails>
       </ExpansionPanel>
-      <Typography gutterBottom>Danh sách học sinh</Typography>
+      <TypoGreenH5 text="Danh sách học sinh" />
       <StudentList />
     </Paper>
   );
