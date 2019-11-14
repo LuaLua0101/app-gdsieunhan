@@ -16,11 +16,6 @@ import {
   KeyboardDatePicker
 } from "@material-ui/pickers";
 import InputAdornment from "@material-ui/core/InputAdornment";
-import Grid from "@material-ui/core/Grid";
-import Checkbox from "@material-ui/core/Checkbox";
-import FormGroup from "@material-ui/core/FormGroup";
-import FormControl from "@material-ui/core/FormControl";
-import FormLabel from "@material-ui/core/FormLabel";
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -60,12 +55,7 @@ const StudentInput = props => {
   const fee = useFormInput("");
   const [value, setValue] = useState("female");
   const [date, setDate] = useState(0);
-  const [state, setState] = React.useState({});
 
-  const handleSelect = name => event => {
-    console.log(state);
-    setState({ ...state, [name]: event.target.checked });
-  };
   const [selectedDate, setSelectedDate] = React.useState(
     new Date("2014-08-18T21:11:54")
   );
@@ -106,19 +96,13 @@ const StudentInput = props => {
           className={classes.textField}
         />
         <TextField
-          label="Biệt danh học sinh"
+          label="Địa chỉ"
           margin="normal"
           variant="outlined"
           className={classes.textField}
         />
         <TextField
-          label="Họ tên mẹ"
-          margin="normal"
-          variant="outlined"
-          className={classes.textField}
-        />
-        <TextField
-          label="Số điện thoại Mẹ"
+          label="Số điện thoại liên hệ"
           margin="normal"
           type="number"
           variant="outlined"
@@ -127,36 +111,6 @@ const StudentInput = props => {
               <InputAdornment position="start">(+84) </InputAdornment>
             )
           }}
-          className={classes.textField}
-        />
-        <TextField
-          label="Họ tên bố"
-          margin="normal"
-          variant="outlined"
-          className={classes.textField}
-        />
-        <TextField
-          label="Số điện thoại Bố"
-          margin="normal"
-          type="number"
-          variant="outlined"
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">(+84) </InputAdornment>
-            )
-          }}
-          className={classes.textField}
-        />
-        <TextField
-          label="Địa chỉ liên hệ"
-          margin="normal"
-          variant="outlined"
-          className={classes.textField}
-        />
-        <TextField
-          label="Facebook cá nhân"
-          margin="normal"
-          variant="outlined"
           className={classes.textField}
         />
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -197,149 +151,8 @@ const StudentInput = props => {
             />
           )}
         />
-        <div className={classes.textField}>
-          <FormControl component="fieldset">
-            <FormLabel component="legend">Tính cách của trẻ</FormLabel>
-            <FormGroup aria-label="position" row>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={state.checkedA}
-                    onChange={handleSelect("checkedA")}
-                    value="checkedA"
-                  />
-                }
-                label="Trầm lặng"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={state.checkedB}
-                    onChange={handleSelect("checkedB")}
-                    value="checkedB"
-                  />
-                }
-                label="Kiên nhẫn"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={state.checkedC}
-                    onChange={handleSelect("checkedC")}
-                    value="checkedC"
-                  />
-                }
-                label="Dễ nản chí"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={state.checkedD}
-                    onChange={handleSelect("checkedD")}
-                    value="checkedD"
-                  />
-                }
-                label="Lăng xăng"
-              />
-              <FormControlLabel
-                control={
-                  <TextField
-                    label="Khác (nếu có)"
-                    margin="normal"
-                    variant="outlined"
-                    className={classes.textField}
-                  />
-                }
-              />
-            </FormGroup>
-          </FormControl>
-        </div>
-        <div className={classes.textField}>
-          <FormControl component="fieldset">
-            <FormLabel component="legend">Trẻ đi học</FormLabel>
-            <FormGroup aria-label="position" row>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={state.checkedA}
-                    onChange={handleSelect("checkedA")}
-                    value="checkedA"
-                  />
-                }
-                label="Nhà trẻ"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={state.checkedB}
-                    onChange={handleSelect("checkedB")}
-                    value="checkedB"
-                  />
-                }
-                label="Tiểu học"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={state.checkedC}
-                    onChange={handleSelect("checkedC")}
-                    value="checkedC"
-                  />
-                }
-                label="Trung tâm chuyên biệt"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={state.checkedD}
-                    onChange={handleSelect("checkedD")}
-                    value="checkedD"
-                  />
-                }
-                label="Ở nhà"
-              />
-              <FormControlLabel
-                control={
-                  <TextField
-                    style={{ size: 15 }}
-                    label="Khác (nếu có)"
-                    margin="normal"
-                    variant="outlined"
-                  />
-                }
-              />
-            </FormGroup>
-          </FormControl>
-        </div>
         <TextField
-          label="Ba mẹ chia sẻ tình trạng cụ thể của con và những điểm lưu ý mà ba mẹ lo lắng?"
-          margin="normal"
-          variant="outlined"
-          className={classes.textField}
-          multiline={true}
-          rows={2}
-          rowsMax={4}
-        />
-        <TextField
-          label="Ba mẹ hãy chia sẻ những việc con làm được? Chưa làm được? Mong muốn của ba mẹ?"
-          margin="normal"
-          variant="outlined"
-          className={classes.textField}
-          multiline={true}
-          rows={2}
-          rowsMax={4}
-        />
-        <TextField
-          label="Ba mẹ có yêu cầu, mong muốn đăng ký học khung giờ nào trong ngày?"
-          margin="normal"
-          variant="outlined"
-          className={classes.textField}
-          multiline={true}
-          rows={2}
-          rowsMax={4}
-        />
-        <TextField
-          label="Ghi chú thêm của cô"
+          label="Ghi chú"
           margin="normal"
           variant="outlined"
           className={classes.textField}
