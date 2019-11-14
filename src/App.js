@@ -68,7 +68,11 @@ const App = props => {
   const classes = useStyles();
   const [menu, setMenu] = useState(false);
 
-  
+  useEffect(() => {
+    if (props.isMobile()) console.log("mobile");
+    else if (props.isTablet()) console.log("isTablet");
+    else console.log("isPC");
+  }, []);
 
   const toggleDrawer = (side, open) => event => {
     if (
@@ -147,7 +151,11 @@ const App = props => {
         <SnackbarProvider maxSnack={3} autoHideDuration={1000}>
           <Router>
             <div
-              className={classes.root}
+              className={
+                props.isMobile() || props.isTablet()
+                  ? classes.root
+                  : classes.rootPC
+              }
             >
               <AppBar
                 position="static"
