@@ -60,7 +60,7 @@ const useStyles = makeStyles(theme => ({
 
 const theme = createMuiTheme({
   typography: {
-    fontFamily: ["Avenir"].join(",")
+    fontFamily: ["Segoe UI"].join(",")
   }
 });
 
@@ -98,6 +98,14 @@ const App = props => {
           </ListItemIcon>
           <Link to="/">
             <ListItemText primary="Thêm giao dịch" />
+          </Link>
+        </ListItem>
+        <ListItem>
+          <ListItemIcon>
+            <InboxIcon />
+          </ListItemIcon>
+          <Link to="/notify">
+            <ListItemText primary="Thông báo" />
           </Link>
         </ListItem>
         <Divider />
