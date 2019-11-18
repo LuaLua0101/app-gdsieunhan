@@ -9,13 +9,14 @@ import {
 import Fab from "@material-ui/core/Fab";
 import DynamicImport from "../../utils/lazyImport";
 import SearchIcon from "@material-ui/icons/Search";
-import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
-import { withStyles } from "@material-ui/core/styles";
 import { makeStyles } from "@material-ui/core/styles";
+import ExpansionPanel from "@material-ui/core/ExpansionPanel";
+import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
+import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
+import Typography from "@material-ui/core/Typography";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
-const History = DynamicImport(() => import("../templates/multiDateHistory"));
-const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+const History = DynamicImport(() => import("../organisms/reportDaily"));
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -23,9 +24,8 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function DayChart() {
+export default function HistoryOfObservation() {
   const classes = useStyles();
-  // The first commit of Material-UI
   const [selectedDate, setSelectedDate] = React.useState(new Date());
 
   const handleDateChange = date => {
@@ -38,7 +38,7 @@ export default function DayChart() {
         <KeyboardDatePicker
           margin="normal"
           id="date-picker-dialog"
-          label="Ngày bắt đầu"
+          label="Xem từ ngày"
           format="MM/dd/yyyy"
           value={selectedDate}
           onChange={handleDateChange}
@@ -49,7 +49,7 @@ export default function DayChart() {
         <KeyboardDatePicker
           margin="normal"
           id="date-picker-dialog"
-          label="Ngày kết thúc"
+          label="Đến ngày"
           format="MM/dd/yyyy"
           value={selectedDate}
           onChange={handleDateChange}
@@ -75,38 +75,21 @@ export default function DayChart() {
       >
         <SearchIcon /> Xem lịch sử
       </Fab>
-      <History />
-      <Paper
-        className={classes.root}
-        style={{
-          backgroundColor: "#44cbdf",
-          backgroundImage: "linear-gradient(141deg,  #44cbdf 15%, #01ca7c 85%)",
-          color: "#fbfefe",
-          boxShadow: "none",
-          borderRadius: 0
-        }}
-      >
-        <Typography variant="h5" component="h3">
-          Tổng thu nhập
-        </Typography>
-        <Typography component="p">100,000,000 vnđ</Typography>
-      </Paper>
-      <Paper
-        className={classes.root}
-        style={{
-          backgroundColor: "#fbfefe",
-          backgroundImage:
-            "linear-gradient(to right, #ff8177 0%, #ff867a 0%, #ff8c7f 21%, #f99185 52%, #cf556c 78%, #b12a5b 100%)",
-          color: "#fbfefe",
-          boxShadow: "none",
-          borderRadius: 0
-        }}
-      >
-        <Typography variant="h5" component="h3">
-          Tổng chi tiêu
-        </Typography>
-        <Typography component="p">500,000,000 vnđ</Typography>
-      </Paper>
+      <br />
+      <ExpansionPanel>
+        <ExpansionPanelSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1a-content"
+          id="panel1a-header"
+        >
+          <Typography className={classes.heading}>
+            Lịch sử theo dõi ngày 1/10/2019
+          </Typography>
+        </ExpansionPanelSummary>
+        <ExpansionPanelDetails>
+          <History />
+        </ExpansionPanelDetails>
+      </ExpansionPanel>
     </MuiPickersUtilsProvider>
   );
 }

@@ -5,8 +5,9 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
 import Chip from "@material-ui/core/Chip";
+import DeleteIcon from "@material-ui/icons/Delete";
+import DeleteDialog from "../atoms/deleteDialog";
 
 const useStyles = makeStyles({
   root: {
@@ -15,24 +16,24 @@ const useStyles = makeStyles({
   }
 });
 
-export default function MoneyHistory() {
+export default function DailyReportHistory() {
   const classes = useStyles();
+  const [open, setOpen] = React.useState(false);
   const [data, setData] = useState([
-    { type: 0, total: "+100k", time: "1 giờ trước" },
-    { type: 1, total: "-100k", time: "2 giờ trước" },
-    { type: 1, total: "-100k", time: "10 giờ trước" },
-    { type: 0, total: "+100k", time: "15 giờ trước" },
-    { type: 0, total: "+100k", time: "1 giờ trước" },
-    { type: 1, total: "-100k", time: "2 giờ trước" }
+    { type: 12345, total: "nguyễn văn a", time: "1 giờ trước" },
+    { type: 12345, total: "nguyễn văn a", time: "2 giờ trước" }
   ]);
+
   const renderType = type => {
-    return (
-      <Chip
-        label={type === 0 ? "Thu" : "Chi"}
-        size="small"
-        color={type === 0 ? "primary" : "secondary"}
-      />
-    );
+    return <Chip label={type} size="small" color="secondary" />;
+  };
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
 
   return (
@@ -49,9 +50,10 @@ export default function MoneyHistory() {
           }}
         >
           <TableRow>
-            <TableCell>Loại</TableCell>
-            <TableCell>Số tiền</TableCell>
-            <TableCell>Thời gian</TableCell>
+            <TableCell>Mã số</TableCell>
+            <TableCell>Tên học sinh</TableCell>
+            <TableCell>Thời gian thêm</TableCell>
+            <TableCell>Xóa</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -60,10 +62,21 @@ export default function MoneyHistory() {
               <TableCell>{renderType(row.type)}</TableCell>
               <TableCell>{row.total}</TableCell>
               <TableCell>{row.time}</TableCell>
+              <TableCell>
+                <DeleteIcon
+                  style={{
+                    color: "black",
+                    cursor: "pointer",
+                    fontSize: 30
+                  }}
+                  onClick={handleClickOpen}
+                />
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
+      <DeleteDialog open={open} handleClose={handleClose} />
     </>
   );
 }

@@ -13,7 +13,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
-import { withRouter } from "react-router";
+import BookmarkIcon from "@material-ui/icons/Bookmark";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -26,7 +26,7 @@ const useStyles = makeStyles({
   }
 });
 
-const StudentList = props => {
+export default function NotifyList() {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
 
@@ -54,7 +54,7 @@ const StudentList = props => {
 
   return (
     <>
-      <Table>
+      <Table className={classes.table} aria-label="simple table">
         <TableHead
           style={{
             backgroundColor: "#44cbdf",
@@ -66,22 +66,31 @@ const StudentList = props => {
           }}
         >
           <TableRow>
-            <TableCell>Loại</TableCell>
             <TableCell>Số tiền</TableCell>
             <TableCell>Lên lịch</TableCell>
+            <TableCell>Ghim</TableCell>
             <TableCell>Xóa</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {data.map(row => (
-            <TableRow onClick={() => props.history.push("/student/1")}>
-              <TableCell>{renderType(row.type)}</TableCell>
+            <TableRow>
               <TableCell>{row.total}</TableCell>
               <TableCell>{row.time}</TableCell>
               <TableCell>
-                <DeleteIcon
+                <BookmarkIcon
                   style={{
                     color: "#01ca7c",
+                    cursor: "pointer",
+                    fontSize: 30
+                  }}
+                  onClick={handleClickOpen}
+                />
+              </TableCell>
+              <TableCell>
+                <DeleteIcon
+                  style={{
+                    color: "black",
                     cursor: "pointer",
                     fontSize: 30
                   }}
@@ -112,6 +121,4 @@ const StudentList = props => {
       </Dialog>
     </>
   );
-};
-
-export default withRouter(StudentList);
+}

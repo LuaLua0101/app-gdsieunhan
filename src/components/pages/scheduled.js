@@ -52,7 +52,7 @@ export default function ScheduledPage() {
   const classes = useStyles();
 
   return (
-    <Paper square>
+    <>
       <ExpansionPanel>
         <ExpansionPanelSummary
           expandIcon={<ExpandMoreIcon />}
@@ -77,6 +77,6 @@ export default function ScheduledPage() {
       </ExpansionPanel>
       <TypoGreenH5 text="Danh sách các khoản cố định" />
       <ScheduleList />
-    </Paper>
+    </>
   );
 }

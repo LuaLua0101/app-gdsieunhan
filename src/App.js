@@ -113,6 +113,15 @@ const App = props => {
           <ListItemIcon>
             <InboxIcon />
           </ListItemIcon>
+          <Link to="/add-report">
+            <ListItemText primary="Theo dõi hàng ngày" />
+          </Link>
+        </ListItem>
+        <Divider />
+        <ListItem>
+          <ListItemIcon>
+            <InboxIcon />
+          </ListItemIcon>
           <Link to="/scheduled">
             <ListItemText primary="Giao dịch cố định" />
           </Link>
@@ -133,6 +142,15 @@ const App = props => {
           </ListItemIcon>
           <Link to="/students">
             <ListItemText primary="Danh sách học sinh" />
+          </Link>
+        </ListItem>
+        <Divider />
+        <ListItem>
+          <ListItemIcon>
+            <InboxIcon />
+          </ListItemIcon>
+          <Link to="/add-notify">
+            <ListItemText primary="Quản lý thông báo" />
           </Link>
         </ListItem>
         <Divider />

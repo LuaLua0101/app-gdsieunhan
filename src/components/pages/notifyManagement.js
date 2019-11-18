@@ -9,8 +9,8 @@ import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
-const StudentInput = DynamicImport(() => import("../organisms/studentInput"));
-const StudentList = DynamicImport(() => import("../organisms/studentList"));
+const NotifyInput = DynamicImport(() => import("../organisms/notifyInput"));
+const NotifyList = DynamicImport(() => import("../organisms/notifyList"));
 const TypoGreenH5 = DynamicImport(() => import("../atoms/typoGreenH5"));
 
 function TabPanel(props) {
@@ -46,7 +46,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const StudentsPage = () => {
+export default function NotifyManagementPage() {
   const classes = useStyles();
 
   return (
@@ -65,16 +65,16 @@ const StudentsPage = () => {
             borderRadius: 0
           }}
         >
-          <Typography className={classes.heading}>Thêm học sinh</Typography>
+          <Typography className={classes.heading}>
+            Thêm thông báo mới
+          </Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
-          <StudentInput />
+          <NotifyInput />
         </ExpansionPanelDetails>
       </ExpansionPanel>
-      <TypoGreenH5 text="Danh sách học sinh" />
-      <StudentList />
+      <TypoGreenH5 text="Danh sách thông báo đã tạo" />
+      <NotifyList />
     </>
   );
-};
-
-export default StudentsPage;
+}

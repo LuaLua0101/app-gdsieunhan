@@ -45,7 +45,7 @@ export default function ChartPage() {
   };
 
   return (
-    <Paper square>
+    <>
       <Tabs
         variant="fullWidth"
         value={value}
@@ -64,6 +64,6 @@ export default function ChartPage() {
           <DayChart />
         </TabPanel>
       </SwipeableViews>
-    </Paper>
+    </>
   );
 }

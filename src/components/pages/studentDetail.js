@@ -7,8 +7,10 @@ import PropTypes from "prop-types";
 import Typography from "@material-ui/core/Typography";
 import DynamicImport from "../../utils/lazyImport";
 
-const MonthChart = DynamicImport(() => import("../templates/monthChart"));
-const DayChart = DynamicImport(() => import("../templates/dayChart"));
+const StudentInput = DynamicImport(() => import("../organisms/studentInput"));
+const HistoryOfObservation = DynamicImport(() =>
+  import("../templates/historyOfObservation")
+);
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -45,7 +47,7 @@ export default function StudentDetail() {
   };
 
   return (
-    <Paper square>
+    <>
       <Tabs
         variant="fullWidth"
         value={value}
@@ -53,17 +55,21 @@ export default function StudentDetail() {
         onChange={handleChange}
         aria-label="disabled tabs example"
       >
-        <Tab label="Xem theo tháng" />
-        <Tab label="Xem theo ngày" />
+        <Tab label="Thông tin" />
+        <Tab label="Kế hoạch" />
+        <Tab label="Lịch sử theo dõi" />
       </Tabs>
       <SwipeableViews index={value} onChangeIndex={handleChangeIndex}>
         <TabPanel value={value} index={0}>
-          <MonthChart />
+          <StudentInput update />
         </TabPanel>
         <TabPanel value={value} index={1}>
-          <DayChart />
+          Phần này chưa làm xong
+        </TabPanel>
+        <TabPanel value={value} index={2}>
+          <HistoryOfObservation />
         </TabPanel>
       </SwipeableViews>
-    </Paper>
+    </>
   );
 }

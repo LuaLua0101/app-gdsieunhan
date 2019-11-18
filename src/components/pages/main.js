@@ -46,7 +46,7 @@ export default function MainFinancial() {
   };
 
   return (
-    <Paper square>
+    <>
       <Tabs
         variant="fullWidth"
         value={value}
@@ -68,6 +68,6 @@ export default function MainFinancial() {
       <br />
       <TypoGreenH5 text="Lịch sử thu chi hôm nay" />
       <MoneyHistory />
-    </Paper>
+    </>
   );
 }

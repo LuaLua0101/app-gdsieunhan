@@ -63,12 +63,9 @@ const StudentInput = props => {
   const [state, setState] = React.useState({});
 
   const handleSelect = name => event => {
-    console.log(state);
     setState({ ...state, [name]: event.target.checked });
   };
-  const [selectedDate, setSelectedDate] = React.useState(
-    new Date("2014-08-18T21:11:54")
-  );
+  const [selectedDate, setSelectedDate] = React.useState(new Date());
 
   const handleDateChange = date => {
     setSelectedDate(date);
@@ -363,7 +360,7 @@ const StudentInput = props => {
           onClick={handleClickVariant(props.in ? "success" : "warning")}
         >
           <NavigationIcon className={classes.extendedIcon} />
-          Xác nhận thêm
+          {props.update ? "Xác nhận sửa" : "Xác nhận thêm"}
         </Fab>
       </form>
     </>
