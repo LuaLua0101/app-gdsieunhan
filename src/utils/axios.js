@@ -1,5 +1,5 @@
 import axios from "axios";
-import React from "react";
+
 const API_URL = "https://ihtgo.com.vn/api/";
 
 axios.defaults.baseURL = "https://iht-cors-server.herokuapp.com/" + API_URL;
@@ -17,20 +17,14 @@ axios.interceptors.response.use(
   },
   error => {
     if (error.response && error.response.status === 401) {
-      // console.log(window.location.pathname);
-      // if (
-      //   window.location.pathname !== "/signin" &&
-      //   window.location.pathname !== ""
-      // ) {
-      //   message.error(
-      //     <>
-      //       Phiên đăng nhập đã hết hạn, xác thực lỗi <br />
-      //       Vui lòng đăng nhập lại
-      //     </>
-      //   );
-      //   localStorage.removeItem("@token");
-      //   window.location.href = "/signin";
-      // }
+      if (
+        window.location.pathname !== "/login" &&
+        window.location.pathname !== ""
+      ) {
+        alert("Vui lòng đăng nhập lại");
+        localStorage.removeItem("@token");
+        window.location.href = "/login";
+      }
     }
     return error;
   }

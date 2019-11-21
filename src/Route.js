@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Route, Switch } from "react-router-dom";
 import DynamicImport from "./utils/lazyImport";
 
@@ -8,6 +8,7 @@ const ScheduledPage = DynamicImport(() =>
 );
 const StudentsPage = DynamicImport(() => import("./components/pages/students"));
 const ChartPage = DynamicImport(() => import("./components/pages/chart"));
+const LoginPage = DynamicImport(() => import("./components/pages/login"));
 const NotFoundPage = DynamicImport(() => import("./components/pages/404"));
 const NotifyPage = DynamicImport(() => import("./components/pages/notify"));
 const NotifyManagementPage = DynamicImport(() =>
@@ -24,6 +25,7 @@ const RouteMap = () => {
   return (
     <Switch>
       <Route exact path="/" component={MainPage} />
+      <Route exact path="/login" component={LoginPage} />
       <Route exact path="/notify" component={NotifyPage} />
       <Route exact path="/chart" component={ChartPage} />
       <Route exact path="/scheduled" component={ScheduledPage} />
