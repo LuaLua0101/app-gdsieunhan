@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Link as ReactLink, withRouter } from "react-router-dom";
+import React from "react";
+import { withRouter } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
@@ -12,7 +12,6 @@ import ExpandMore from "@material-ui/icons/ExpandMore";
 import StarBorder from "@material-ui/icons/StarBorder";
 import MonetizationOnIcon from "@material-ui/icons/MonetizationOn";
 import NotificationsIcon from "@material-ui/icons/Notifications";
-import EmojiPeopleIcon from "@material-ui/icons/EmojiPeople";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import AddIcon from "@material-ui/icons/Add";
 import ShowChartIcon from "@material-ui/icons/ShowChart";
@@ -24,6 +23,7 @@ import PersonOutlineIcon from "@material-ui/icons/PersonOutline";
 import PersonIcon from "@material-ui/icons/Person";
 import PeopleOutlineIcon from "@material-ui/icons/PeopleOutline";
 import FaceIcon from "@material-ui/icons/Face";
+import axios from "./utils/axios";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -98,6 +98,13 @@ const Menu = props => {
       return;
     }
     setMenu(false);
+  };
+
+  const logout = () => {
+    axios.get("logout").then(res => {
+      localStorage.removeItem("@token");
+      window.location.replace("/login");
+    });
   };
 
   return (
@@ -297,13 +304,7 @@ const Menu = props => {
           <ListItemIcon>
             <ExitToAppIcon />
           </ListItemIcon>
-          <ListItemText
-            primary="Đăng xuất"
-            onClick={() => {
-              localStorage.removeItem("@token");
-              window.location.replace("/login");
-            }}
-          />
+          <ListItemText primary="Đăng xuất" onClick={logout} />
         </ListItem>
       </List>
     </div>

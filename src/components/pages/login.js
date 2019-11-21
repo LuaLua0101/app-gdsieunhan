@@ -1,10 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Fab from "@material-ui/core/Fab";
 import NavigationIcon from "@material-ui/icons/Done";
 import { useSnackbar } from "notistack";
 import DynamicImport from "../../utils/lazyImport";
+import useFormInput from "../../utils/useFormInput";
+import axios from "../../utils/axios";
 
 const TypoGreenH5 = DynamicImport(() => import("../atoms/typoGreenH5"));
 const TypoRedH5 = DynamicImport(() => import("../atoms/typoRedH5"));
@@ -24,15 +26,38 @@ const useStyles = makeStyles(theme => ({
 const Login = props => {
   const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
+  const [loading, setLoading] = useState(false);
+  const phone = useFormInput();
+  const password = useFormInput();
 
   useEffect(() => {
     if (localStorage.getItem("@token")) window.location.replace("/");
   }, []);
 
   const login = () => {
-    localStorage.setItem("@token", 123);
-    enqueueSnackbar("Xác nhận chi thành công!", { variant: "error" });
-    window.location.replace("/");
+    setLoading(true);
+    axios
+      .post("login", {
+        phone: phone.value,
+        password: password.value
+      })
+      .then(res => {
+        if (res.data.token) {
+          localStorage.setItem("@token", res.data.token);
+          enqueueSnackbar("Đăng nhập thành công!", { variant: "success" });
+          window.location.replace("/");
+        } else if (!res.data.success) {
+          enqueueSnackbar("Đăng nhập thất bại, vui lòng thử lại ! ", {
+            variant: "error"
+          });
+        }
+      })
+      .catch(err =>
+        enqueueSnackbar(err.message, {
+          variant: "error"
+        })
+      )
+      .finally(() => setLoading(false));
   };
 
   return (
@@ -53,6 +78,7 @@ const Login = props => {
           margin="normal"
           variant="outlined"
           className={classes.textField}
+          {...phone}
         />
         <TextField
           label="Mật khẩu đăng nhập"
@@ -61,6 +87,7 @@ const Login = props => {
           type="password"
           autoComplete="current-password"
           className={classes.textField}
+          {...password}
         />
         <Fab
           variant="extended"
