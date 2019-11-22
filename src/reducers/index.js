@@ -1,8 +1,10 @@
 import { combineReducers } from "redux";
-import sideBar from "./sideBar";
+import transactions from "./transactions";
+import notifies from "./notifies";
 
 const reducer = combineReducers({
-  sideBar: sideBar
+  transactions: transactions,
+  notifies: notifies
 });
 
 export default reducer;

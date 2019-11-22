@@ -185,7 +185,7 @@ const Menu = props => {
                 primary="Thông báo phụ huynh"
                 onClick={() => {
                   props.close();
-                  props.history.push("/notify");
+                  props.history.push("/notify/ph");
                 }}
               />
             </ListItem>
@@ -197,7 +197,7 @@ const Menu = props => {
                 primary="Thông báo giáo viên"
                 onClick={() => {
                   props.close();
-                  props.history.push("/notify");
+                  props.history.push("/notify/gv");
                 }}
               />
             </ListItem>
@@ -209,7 +209,7 @@ const Menu = props => {
                 primary="Quản lý thông báo"
                 onClick={() => {
                   props.close();
-                  props.history.push("/add-notify");
+                  props.history.push("/notifies");
                 }}
               />
             </ListItem>

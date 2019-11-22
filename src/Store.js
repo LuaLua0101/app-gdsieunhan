@@ -1,14 +1,10 @@
 import { applyMiddleware } from "redux";
 import { createStore } from "react-hooks-global-state";
 import reducer from "./reducers";
-import { ALL } from "./utils/constants";
 
 const initialState = {
-  sourceLocation: {},
-  desLocation: {},
-  orderInfo: {},
-  orderList: { current_option: ALL },
-  sideBar: { key: "1" }
+  transactions: [],
+  notifies: []
 };
 
 var logger = function(_a) {

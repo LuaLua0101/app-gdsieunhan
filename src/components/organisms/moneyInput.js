@@ -1,12 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Fab from "@material-ui/core/Fab";
 import NavigationIcon from "@material-ui/icons/Done";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import useFormInput from "../../utils/useFormNumber";
+import { dispatch, useGlobalState } from "../../Store";
+import useFormInput from "../../utils/useFormInput";
 import { useSnackbar } from "notistack";
 import InputAdornment from "@material-ui/core/InputAdornment";
+import axios from "../../utils/axios";
+
 const notes = ["Đi chợ", "Mua linh tinh", "Lý do khác"];
 
 const useStyles = makeStyles(theme => ({
@@ -30,14 +33,6 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const moneyArr = [
-  { number: 20000, label: "20k", color: "#359aca" },
-  { number: 50000, label: "50k", color: "#54afcd" },
-  { number: 100000, label: "100k", color: "#72c4d0" },
-  { number: 200000, label: "200k", color: "#91d9d3" },
-  { number: 500000, label: "500k", color: "#01ca7c" }
-];
-
 const formatMoney = money => {
   return money
     ? money.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
@@ -47,50 +42,82 @@ const formatMoney = money => {
 const MoneyInput = props => {
   const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
-  const [note, setNote] = useState([]);
-  const fee = useFormInput("");
+  const noteContent = useFormInput();
+  const fee = useFormInput();
+  const [loading, setLoading] = useState(false);
 
   const handleClickVariant = variant => () => {
-    // variant could be success, error, warning, info, or default
-    enqueueSnackbar(
-      props.in ? "Xác nhận thu thành công!" : "Xác nhận chi thành công!",
-      { variant }
-    );
+    setLoading(true);
+    axios
+      .post("transaction/add", {
+        fee: parseInt(fee.value.replace(/,/g, "")),
+        note: noteContent.value,
+        type: props.in ? 0 : 1
+      })
+      .then(res => {
+        enqueueSnackbar(
+          props.in ? "Xác nhận thu thành công!" : "Xác nhận chi thành công!",
+          { variant }
+        );
+        noteContent.setValue("");
+        fee.setValue("");
+        dispatch({
+          type: "add_transactions",
+          transactions: [
+            {
+              id: res.data.id,
+              fee: parseInt(fee.value.replace(/,/g, "")),
+              note: noteContent.value,
+              type: props.in ? 0 : 1,
+              created_at: res.data.created_at
+            }
+          ]
+        });
+      })
+      .catch(err =>
+        enqueueSnackbar(err.message, {
+          variant: "error"
+        })
+      )
+      .finally(() => setLoading(false));
   };
 
   return (
     <>
       <form className={classes.container} noValidate autoComplete="off">
-        <Autocomplete
-          freeSolo
+        <TextField
           className={classes.textField}
-          options={note}
-          {...fee}
-          renderInput={params => (
-            <TextField
-              {...params}
-              label="Số tiền"
-              margin="normal"
-              variant="outlined"
-              fullWidth
-              onChange={e => {
-                const value = parseInt(e.target.value.replace(/,/g, ""));
-                fee.setValue(formatMoney(value));
-              }}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">VNĐ</InputAdornment>
-                )
-              }}
-            />
-          )}
+          value={fee.value}
+          label="Số tiền"
+          margin="normal"
+          variant="outlined"
+          fullWidth
+          onChange={e => {
+            let v = e.target.value;
+            if (isNaN(v.replace(/,/g, ""))) {
+              v = v.substring(0, v.length - 1);
+            }
+            const value = parseInt(v.replace(/,/g, ""));
+            console.log(value);
+            fee.setValue(formatMoney(value));
+          }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">VNĐ</InputAdornment>
+            )
+          }}
         />
         <Autocomplete
           freeSolo
           className={classes.textField}
           options={notes.map(option => option)}
+          onChange={(e, value) => {
+            noteContent.setValue(value);
+          }}
+          value={noteContent.value}
           renderInput={params => (
             <TextField
+              {...noteContent}
               {...params}
               label="Ghi chú"
               margin="normal"
@@ -118,13 +145,6 @@ const MoneyInput = props => {
           {props.in ? "Xác nhận thu" : "Xác nhận chi"}
         </Fab>
       </form>
-      {/* {moneyArr.map(i => (
-        <Chip
-          style={{ margin: 5, backgroundColor: i.color, color: "#fbfefe" }}
-          label={i.label}
-          size="small"
-        />
-      ))} */}
     </>
   );
 };

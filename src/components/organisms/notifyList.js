@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -14,6 +14,10 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
 import BookmarkIcon from "@material-ui/icons/Bookmark";
+import { dispatch, useGlobalState } from "../../Store";
+import axios from "../../utils/axios";
+import moment from "moment";
+import { useSnackbar } from "notistack";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -22,15 +26,37 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const useStyles = makeStyles({
   root: {
     width: "100%",
-    overflow: "auto"
+    overflowX: "scroll"
   }
 });
 
 export default function NotifyList() {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
+  const [notifies] = useGlobalState("notifies");
+  const [loading, setLoading] = useState(false);
+  const [delID, setDelID] = useState();
+  const { enqueueSnackbar } = useSnackbar();
+  useEffect(() => {
+    setLoading(true);
+    axios
+      .get("notify/list")
+      .then(res => {
+        dispatch({
+          type: "add_notifies",
+          notify: res.data
+        });
+      })
+      .catch()
+      .finally(() => setLoading(false));
+  }, []);
 
   const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const remove = id => {
+    setDelID(id);
     setOpen(true);
   };
 
@@ -38,14 +64,32 @@ export default function NotifyList() {
     setOpen(false);
   };
 
-  const [data, setData] = useState([
-    { type: 0, total: "100k", time: "hàng ngày" },
-    { type: 1, total: "100k", time: "đầu tháng" }
-  ]);
+  const handleOk = () => {
+    axios
+      .post("notify/delete", {
+        id: delID
+      })
+      .then(res => {
+        if (res.data === 200) {
+          dispatch({
+            type: "del_notify",
+            id: delID
+          });
+          enqueueSnackbar("Xác nhận đã xóa", { variant: "success" });
+        }
+      })
+      .catch(err =>
+        enqueueSnackbar(err.message, {
+          variant: "error"
+        })
+      )
+      .finally(() => setOpen(false));
+  };
+
   const renderType = type => {
     return (
       <Chip
-        label={type === 0 ? "Thu" : "Chi"}
+        label={type === 0 ? "GV" : "PH"}
         size="small"
         color={type === 0 ? "primary" : "secondary"}
       />
@@ -66,26 +110,32 @@ export default function NotifyList() {
           }}
         >
           <TableRow>
-            <TableCell>Số tiền</TableCell>
-            <TableCell>Lên lịch</TableCell>
+            <TableCell>Tiêu đề</TableCell>
+            <TableCell>Loại</TableCell>
+            <TableCell>Ngày lên lịch</TableCell>
             <TableCell>Ghim</TableCell>
             <TableCell>Xóa</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.map(row => (
-            <TableRow>
-              <TableCell>{row.total}</TableCell>
-              <TableCell>{row.time}</TableCell>
+          {notifies.map(row => (
+            <TableRow key={row.id}>
+              <TableCell>{row.title && row.title.substring(0, 10)}</TableCell>
+              <TableCell>{renderType(row.type)}</TableCell>
               <TableCell>
-                <BookmarkIcon
-                  style={{
-                    color: "#01ca7c",
-                    cursor: "pointer",
-                    fontSize: 30
-                  }}
-                  onClick={handleClickOpen}
-                />
+                {moment(row.active_date).format("DD/MM/YY")}
+              </TableCell>
+              <TableCell>
+                {row.pin === 1 && (
+                  <BookmarkIcon
+                    style={{
+                      color: "#01ca7c",
+                      cursor: "pointer",
+                      fontSize: 30
+                    }}
+                    onClick={handleClickOpen}
+                  />
+                )}
               </TableCell>
               <TableCell>
                 <DeleteIcon
@@ -94,7 +144,7 @@ export default function NotifyList() {
                     cursor: "pointer",
                     fontSize: 30
                   }}
-                  onClick={handleClickOpen}
+                  onClick={() => remove(row.id)}
                 />
               </TableCell>
             </TableRow>
@@ -114,7 +164,7 @@ export default function NotifyList() {
           <Button onClick={handleClose} color="primary">
             Hủy, không xóa
           </Button>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={handleOk} color="primary">
             Xóa luôn
           </Button>
         </DialogActions>

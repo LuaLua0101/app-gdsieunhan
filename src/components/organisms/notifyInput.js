@@ -3,25 +3,23 @@ import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Fab from "@material-ui/core/Fab";
 import NavigationIcon from "@material-ui/icons/Done";
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import useFormInput from "../../utils/useFormNumber";
+import useFormInput from "../../utils/useFormInput";
 import { useSnackbar } from "notistack";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import "date-fns";
 import DateFnsUtils from "@date-io/date-fns";
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker
 } from "@material-ui/pickers";
-import InputAdornment from "@material-ui/core/InputAdornment";
 import Grid from "@material-ui/core/Grid";
-import Checkbox from "@material-ui/core/Checkbox";
-import FormGroup from "@material-ui/core/FormGroup";
 import FormControl from "@material-ui/core/FormControl";
-import FormLabel from "@material-ui/core/FormLabel";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
+import Select from "@material-ui/core/Select";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import moment from "moment";
+import axios from "../../utils/axios";
+import { dispatch, useGlobalState } from "../../Store";
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -48,34 +46,82 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const formatMoney = money => {
-  return money
-    ? money.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
-    : "";
-};
-
 const NotifyInput = props => {
   const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
-  const [notes, setNotes] = useState(["123"]);
-  const fee = useFormInput("");
-  const [date, setDate] = useState(0);
-  const [state, setState] = React.useState({});
+  const [notes, setNotes] = useState([""]);
+  const [type, setType] = useState(0);
+  const inputLabel = React.useRef(null);
+  const [labelWidth, setLabelWidth] = useState(0);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const title = useFormInput();
+  const [loading, setLoading] = useState(false);
 
-  const [selectedDate, setSelectedDate] = React.useState(new Date());
+  React.useEffect(() => {
+    setLabelWidth(inputLabel.current.offsetWidth);
+  }, []);
+
+  const handleChange = event => {
+    setType(event.target.value);
+  };
 
   const handleDateChange = date => {
     setSelectedDate(date);
   };
 
-  const handleClickVariant = variant => () => {
-    enqueueSnackbar("Xác nhận chi thành công!", { variant });
+  const create = () => {
+    setLoading(true);
+    axios
+      .post("notify/add", {
+        title: title.value,
+        type: type,
+        date: moment(selectedDate).format("YYYY/MM/DD"),
+        details: notes
+      })
+      .then(res => {
+        enqueueSnackbar("Thêm thông báo thành công!", { variant: "success" });
+        title.setValue("");
+        setType(0);
+        dispatch({
+          type: "add_notifies",
+          notify: [
+            {
+              id: res.data.id,
+              title: title.value,
+              type: type,
+              date: moment(selectedDate).format("YYYY/MM/DD")
+            }
+          ]
+        });
+      })
+      .catch(err =>
+        enqueueSnackbar(err.message, {
+          variant: "error"
+        })
+      )
+      .finally(() => setLoading(false));
   };
 
   return (
     <>
       <form className={classes.container} noValidate autoComplete="off">
+        <FormControl variant="outlined" className={classes.formControl}>
+          <InputLabel ref={inputLabel} id="demo-simple-select-outlined-label">
+            Thông báo dành cho
+          </InputLabel>
+          <Select
+            labelId="demo-simple-select-outlined-label"
+            id="demo-simple-select-outlined"
+            value={type}
+            onChange={handleChange}
+            labelWidth={labelWidth}
+          >
+            <MenuItem value={0}>Giáo viên</MenuItem>
+            <MenuItem value={1}>Phụ huynh</MenuItem>
+          </Select>
+        </FormControl>
         <TextField
+          {...title}
           label="Tiêu đề thông báo"
           margin="normal"
           variant="outlined"
@@ -99,6 +145,12 @@ const NotifyInput = props => {
           <Grid item xs={12}>
             {notes.map((i, index) => (
               <TextField
+                value={i}
+                onChange={e => {
+                  let tmp = notes;
+                  tmp[index] = e.target.value;
+                  setNotes([...tmp]);
+                }}
                 label={"Nội dung mục thông báo số " + (index + 1)}
                 margin="normal"
                 variant="outlined"
@@ -106,7 +158,6 @@ const NotifyInput = props => {
                 multiline={true}
                 rows={2}
                 rowsMax={4}
-                value={i}
               />
             ))}
           </Grid>
@@ -137,7 +188,7 @@ const NotifyInput = props => {
                 color: "#fbfefe",
                 boxShadow: "none"
               }}
-              onClick={handleClickVariant(props.in ? "success" : "warning")}
+              onClick={create}
             >
               <NavigationIcon className={classes.extendedIcon} />
               Xác nhận thêm thông báo

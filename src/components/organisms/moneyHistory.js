@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -12,7 +12,13 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
+import axios from "../../utils/axios";
+import moment from "moment";
+import "moment/locale/vi";
+import { dispatch, useGlobalState } from "../../Store";
+import { useSnackbar } from "notistack";
 
+moment.lang("vi");
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -24,25 +30,65 @@ const useStyles = makeStyles({
   }
 });
 
-export default function MoneyHistory() {
-  const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
+const formatMoney = money => {
+  return money
+    ? money.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+    : "";
+};
 
-  const handleClickOpen = () => {
+export default function MoneyHistory() {
+  const { enqueueSnackbar } = useSnackbar();
+  const classes = useStyles();
+  const [open, setOpen] = useState(false);
+  const [delID, setDelID] = useState();
+  const [loading, setLoading] = useState(false);
+  const [transactions] = useGlobalState("transactions");
+
+  useEffect(() => {
+    setLoading(true);
+    axios
+      .get("transaction/list")
+      .then(res => {
+        dispatch({
+          type: "add_transactions",
+          transactions: res.data
+        });
+      })
+      .catch()
+      .finally(() => setLoading(false));
+  }, []);
+
+  const handleClickOpen = id => {
+    setDelID(id);
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
   };
-  const [data, setData] = useState([
-    { type: 0, total: "+100k", time: "1 giờ trước" },
-    { type: 1, total: "-100k", time: "2 giờ trước" },
-    { type: 1, total: "-100k", time: "10 giờ trước" },
-    { type: 0, total: "+100k", time: "15 giờ trước" },
-    { type: 0, total: "+100k", time: "1 giờ trước" },
-    { type: 1, total: "-100k", time: "2 giờ trước" }
-  ]);
+
+  const handleOk = () => {
+    axios
+      .post("transaction/delete", {
+        id: delID
+      })
+      .then(res => {
+        if (res.data === 200) {
+          dispatch({
+            type: "del_transactions",
+            id: delID
+          });
+          enqueueSnackbar("Xác nhận đã xóa", { variant: "success" });
+        }
+      })
+      .catch(err =>
+        enqueueSnackbar(err.message, {
+          variant: "error"
+        })
+      )
+      .finally(() => setOpen(false));
+  };
+
   const renderType = type => {
     return (
       <Chip
@@ -74,19 +120,21 @@ export default function MoneyHistory() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.map(row => (
+          {transactions.map(row => (
             <TableRow>
               <TableCell>{renderType(row.type)}</TableCell>
-              <TableCell>{row.total}</TableCell>
-              <TableCell>{row.time}</TableCell>
+              <TableCell>{formatMoney(row.fee)}</TableCell>
+              <TableCell>
+                {moment(row.created_at, "YYYYMMDD hhmmss").fromNow()}
+              </TableCell>
               <TableCell>
                 <DeleteIcon
                   style={{
-                    color: "#01ca7c",
+                    color: "black",
                     cursor: "pointer",
                     fontSize: 30
                   }}
-                  onClick={handleClickOpen}
+                  onClick={() => handleClickOpen(row.id)}
                 />
               </TableCell>
             </TableRow>
@@ -106,7 +154,7 @@ export default function MoneyHistory() {
           <Button onClick={handleClose} color="primary">
             Hủy, không xóa
           </Button>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={handleOk} color="primary">
             Xóa luôn
           </Button>
         </DialogActions>

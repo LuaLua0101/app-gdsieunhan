@@ -26,11 +26,12 @@ const RouteMap = () => {
     <Switch>
       <Route exact path="/" component={MainPage} />
       <Route exact path="/login" component={LoginPage} />
-      <Route exact path="/notify" component={NotifyPage} />
+      <Route exact path="/notify/ph" component={NotifyPage} />
+      <Route exact path="/notify/gv" component={NotifyPage} />
       <Route exact path="/chart" component={ChartPage} />
       <Route exact path="/scheduled" component={ScheduledPage} />
       <Route exact path="/students" component={StudentsPage} />
-      <Route exact path="/add-notify" component={NotifyManagementPage} />
+      <Route exact path="/notifies" component={NotifyManagementPage} />
       <Route exact path="/add-report" component={DailyReportBookPage} />
       <Route exact path="/student/:id" component={StudentDetailPage} />
       <Route component={NotFoundPage} />
