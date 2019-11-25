@@ -98,7 +98,6 @@ const MoneyInput = props => {
               v = v.substring(0, v.length - 1);
             }
             const value = parseInt(v.replace(/,/g, ""));
-            console.log(value);
             fee.setValue(formatMoney(value));
           }}
           InputProps={{
@@ -139,7 +138,7 @@ const MoneyInput = props => {
             color: "#fbfefe",
             boxShadow: "none"
           }}
-          onClick={handleClickVariant(props.in ? "success" : "warning")}
+          onClick={handleClickVariant("success")}
         >
           <NavigationIcon className={classes.extendedIcon} />
           {props.in ? "Xác nhận thu" : "Xác nhận chi"}

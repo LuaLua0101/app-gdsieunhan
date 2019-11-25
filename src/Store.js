@@ -4,7 +4,8 @@ import reducer from "./reducers";
 
 const initialState = {
   transactions: [],
-  notifies: []
+  notifies: [],
+  students: []
 };
 
 var logger = function(_a) {

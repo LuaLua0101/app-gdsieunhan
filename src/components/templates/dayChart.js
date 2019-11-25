@@ -1,5 +1,5 @@
 import "date-fns";
-import React from "react";
+import React, { useState } from "react";
 import Grid from "@material-ui/core/Grid";
 import DateFnsUtils from "@date-io/date-fns";
 import {
@@ -11,11 +11,12 @@ import DynamicImport from "../../utils/lazyImport";
 import SearchIcon from "@material-ui/icons/Search";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
-import { withStyles } from "@material-ui/core/styles";
 import { makeStyles } from "@material-ui/core/styles";
+import axios from "../../utils/axios";
+import { useSnackbar } from "notistack";
+import moment from "moment";
 
-const History = DynamicImport(() => import("../templates/multiDateHistory"));
-const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+const History = DynamicImport(() => import("../organisms/dateHistory"));
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -25,11 +26,58 @@ const useStyles = makeStyles(theme => ({
 
 export default function DayChart() {
   const classes = useStyles();
-  // The first commit of Material-UI
-  const [selectedDate, setSelectedDate] = React.useState(new Date());
+  const [from, setFrom] = useState(new Date());
+  const [to, setTo] = useState(new Date());
+  const [transactions, setTransactions] = useState();
+  const [loading, setLoading] = useState(false);
+  const [countIncome, setCountIncome] = useState(0);
+  const [countOutcome, setCountOutcome] = useState(0);
+  const { enqueueSnackbar } = useSnackbar();
 
-  const handleDateChange = date => {
-    setSelectedDate(date);
+  const handleDateFrom = date => {
+    setFrom(date);
+  };
+
+  const handleDateTo = date => {
+    setTo(date);
+  };
+
+  const getHistories = () => {
+    setLoading(true);
+    axios
+      .post("transaction/histories", {
+        from: moment(from).format("YYYY/MM/DD"),
+        to: moment(to).format("YYYY/MM/DD")
+      })
+      .then(res => {
+        setTransactions(res.data);
+        count(res.data);
+      })
+      .catch(err =>
+        enqueueSnackbar(err.message, {
+          variant: "error"
+        })
+      )
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  const count = _transactions => {
+    let income = 0;
+    let outcome = 0;
+    if (_transactions) {
+      Object.keys(_transactions).forEach(i => {
+        _transactions[i].forEach(row => {
+          if (row.type === 0) income += row.fee;
+          else if (row.type === 1) outcome += row.fee;
+        });
+      });
+    }
+    setCountIncome(income.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,"));
+    setCountOutcome(
+      outcome.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+    );
   };
 
   return (
@@ -40,8 +88,8 @@ export default function DayChart() {
           id="date-picker-dialog"
           label="Ngày bắt đầu"
           format="MM/dd/yyyy"
-          value={selectedDate}
-          onChange={handleDateChange}
+          value={from}
+          onChange={handleDateFrom}
           KeyboardButtonProps={{
             "aria-label": "change date"
           }}
@@ -51,8 +99,8 @@ export default function DayChart() {
           id="date-picker-dialog"
           label="Ngày kết thúc"
           format="MM/dd/yyyy"
-          value={selectedDate}
-          onChange={handleDateChange}
+          value={to}
+          onChange={handleDateTo}
           KeyboardButtonProps={{
             "aria-label": "change date"
           }}
@@ -72,10 +120,14 @@ export default function DayChart() {
           color: "#fbfefe",
           boxShadow: "none"
         }}
+        onClick={getHistories}
       >
         <SearchIcon /> Xem lịch sử
       </Fab>
-      <History />
+      {transactions &&
+        Object.keys(transactions).map(i => (
+          <History title={i} data={transactions[i]} />
+        ))}
       <Paper
         className={classes.root}
         style={{
@@ -89,7 +141,7 @@ export default function DayChart() {
         <Typography variant="h5" component="h3">
           Tổng thu nhập
         </Typography>
-        <Typography component="p">100,000,000 vnđ</Typography>
+        <Typography component="p">{countIncome} vnđ</Typography>
       </Paper>
       <Paper
         className={classes.root}
@@ -105,7 +157,7 @@ export default function DayChart() {
         <Typography variant="h5" component="h3">
           Tổng chi tiêu
         </Typography>
-        <Typography component="p">500,000,000 vnđ</Typography>
+        <Typography component="p">{countOutcome} vnđ</Typography>
       </Paper>
     </MuiPickersUtilsProvider>
   );

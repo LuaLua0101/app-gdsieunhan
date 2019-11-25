@@ -5,7 +5,6 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
 import Chip from "@material-ui/core/Chip";
 import DeleteIcon from "@material-ui/icons/Delete";
 import Button from "@material-ui/core/Button";
@@ -18,6 +17,13 @@ import { dispatch, useGlobalState } from "../../Store";
 import axios from "../../utils/axios";
 import moment from "moment";
 import { useSnackbar } from "notistack";
+import DynamicImport from "../../utils/lazyImport";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
+
+const Detail = DynamicImport(() => import("../templates/notifyDetail"));
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -32,18 +38,23 @@ const useStyles = makeStyles({
 
 export default function NotifyList() {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [detail, setDetail] = useState({
+    id: null,
+    open: false
+  });
   const [notifies] = useGlobalState("notifies");
   const [loading, setLoading] = useState(false);
   const [delID, setDelID] = useState();
   const { enqueueSnackbar } = useSnackbar();
+
   useEffect(() => {
     setLoading(true);
     axios
       .get("notify/list")
       .then(res => {
         dispatch({
-          type: "add_notifies",
+          type: "init_notifies",
           notify: res.data
         });
       })
@@ -70,13 +81,11 @@ export default function NotifyList() {
         id: delID
       })
       .then(res => {
-        if (res.data === 200) {
-          dispatch({
-            type: "del_notify",
-            id: delID
-          });
-          enqueueSnackbar("Xác nhận đã xóa", { variant: "success" });
-        }
+        dispatch({
+          type: "del_notify",
+          id: delID
+        });
+        enqueueSnackbar("Xác nhận đã xóa", { variant: "success" });
       })
       .catch(err =>
         enqueueSnackbar(err.message, {
@@ -95,6 +104,42 @@ export default function NotifyList() {
       />
     );
   };
+
+  const detailDialog = (
+    <Dialog fullScreen open={detail.open}>
+      <AppBar
+        style={{
+          position: "fixed",
+          backgroundColor: "#fbfefe",
+          backgroundImage:
+            "linear-gradient(to right, #fff792 30%, #fef37f 52%,#ffef6d 100%)"
+        }}
+      >
+        <Toolbar>
+          <IconButton
+            edge="start"
+            color="inherit"
+            onClick={() =>
+              setDetail({
+                id: null,
+                open: false
+              })
+            }
+            style={{
+              color: "black"
+            }}
+            aria-label="close"
+          >
+            <CloseIcon />
+          </IconButton>
+        </Toolbar>
+      </AppBar>
+      <br />
+      <br />
+      <br />
+      <Detail id={detail.id} />
+    </Dialog>
+  );
 
   return (
     <>
@@ -120,7 +165,16 @@ export default function NotifyList() {
         <TableBody>
           {notifies.map(row => (
             <TableRow key={row.id}>
-              <TableCell>{row.title && row.title.substring(0, 10)}</TableCell>
+              <TableCell
+                onClick={() => {
+                  setDetail({
+                    open: true,
+                    id: row.id
+                  });
+                }}
+              >
+                {row.title && row.title.substring(0, 10)}
+              </TableCell>
               <TableCell>{renderType(row.type)}</TableCell>
               <TableCell>
                 {moment(row.active_date).format("DD/MM/YY")}
@@ -151,6 +205,7 @@ export default function NotifyList() {
           ))}
         </TableBody>
       </Table>
+      {detailDialog}
       <Dialog
         open={open}
         TransitionComponent={Transition}

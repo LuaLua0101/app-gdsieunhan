@@ -82,6 +82,7 @@ const NotifyInput = props => {
         enqueueSnackbar("Thêm thông báo thành công!", { variant: "success" });
         title.setValue("");
         setType(0);
+        setNotes([""]);
         dispatch({
           type: "add_notifies",
           notify: [

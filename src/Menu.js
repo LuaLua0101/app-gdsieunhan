@@ -269,7 +269,7 @@ const Menu = props => {
                 primary="Danh sách giáo viên"
                 onClick={() => {
                   props.close();
-                  props.history.push("/students");
+                  props.history.push("/teachers");
                 }}
               />
             </ListItem>

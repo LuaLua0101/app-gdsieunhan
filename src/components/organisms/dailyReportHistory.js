@@ -7,7 +7,6 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Chip from "@material-ui/core/Chip";
 import DeleteIcon from "@material-ui/icons/Delete";
-import DeleteDialog from "../atoms/deleteDialog";
 
 const useStyles = makeStyles({
   root: {
@@ -76,7 +75,6 @@ export default function DailyReportHistory() {
           ))}
         </TableBody>
       </Table>
-      <DeleteDialog open={open} handleClose={handleClose} />
     </>
   );
 }

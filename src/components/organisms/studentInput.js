@@ -3,8 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Fab from "@material-ui/core/Fab";
 import NavigationIcon from "@material-ui/icons/Done";
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import useFormInput from "../../utils/useFormNumber";
+import useFormInput from "../../utils/useFormInput";
 import { useSnackbar } from "notistack";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
@@ -16,11 +15,9 @@ import {
   KeyboardDatePicker
 } from "@material-ui/pickers";
 import InputAdornment from "@material-ui/core/InputAdornment";
-import Grid from "@material-ui/core/Grid";
-import Checkbox from "@material-ui/core/Checkbox";
-import FormGroup from "@material-ui/core/FormGroup";
-import FormControl from "@material-ui/core/FormControl";
-import FormLabel from "@material-ui/core/FormLabel";
+import axios from "../../utils/axios";
+import { dispatch, useGlobalState } from "../../Store";
+import moment from "moment";
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -56,63 +53,127 @@ const formatMoney = money => {
 const StudentInput = props => {
   const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
-  const [note, setNote] = useState([]);
-  const fee = useFormInput("");
-  const [value, setValue] = useState("female");
-  const [date, setDate] = useState(0);
-  const [state, setState] = React.useState({});
-
-  const handleSelect = name => event => {
-    setState({ ...state, [name]: event.target.checked });
-  };
-  const [selectedDate, setSelectedDate] = React.useState(new Date());
+  const subId = useFormInput();
+  const fee = useFormInput();
+  const alias = useFormInput();
+  const mName = useFormInput();
+  const fName = useFormInput();
+  const mPhone = useFormInput();
+  const fPhone = useFormInput();
+  const mFB = useFormInput();
+  const fFB = useFormInput();
+  const address = useFormInput();
+  const note = useFormInput();
+  const name = useFormInput();
+  const [gender, setGender] = useState(1);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [loading, setLoading] = useState(false);
 
   const handleDateChange = date => {
     setSelectedDate(date);
   };
 
-  const handleChange = event => {
-    setValue(event.target.value);
+  const handleChangeGender = event => {
+    setGender(parseInt(event.target.value));
   };
 
-  const handleClickVariant = variant => () => {
-    enqueueSnackbar("Xác nhận chi thành công!", { variant });
+  const clear = () => {
+    fee.setValue("");
+    alias.setValue("");
+    mName.setValue("");
+    fName.setValue("");
+    mPhone.setValue("");
+    fPhone.setValue("");
+    mFB.setValue("");
+    fFB.setValue("");
+    address.setValue("");
+    note.setValue("");
+    name.setValue("");
+  };
+
+  const addStudent = () => {
+    setLoading(true);
+    axios
+      .post("student/add", {
+        name: name.value,
+        alias: alias.value,
+        fee: parseInt(fee.value.replace(/,/g, "")),
+        note: note.value,
+        gender,
+        dob: moment(selectedDate).format("YYYY/MM/DD"),
+        mName: mName.value,
+        mPhone: mPhone.value,
+        mFB: mFB.value,
+        fName: fName.value,
+        fPhone: fPhone.value,
+        fFB: fFB.value
+      })
+      .then(res => {
+        dispatch({
+          type: "add_students",
+          students: [
+            {
+              id: res.data.id,
+              created_at: res.data.created_at
+            }
+          ]
+        });
+        clear();
+        enqueueSnackbar("Xác nhận thêm thành công!", { variant: "success" });
+      })
+      .catch(err =>
+        enqueueSnackbar(err.message, {
+          variant: "error"
+        })
+      )
+      .finally(() => setLoading(false));
   };
 
   return (
     <>
       <form className={classes.container} noValidate autoComplete="off">
-        <RadioGroup name="gender1" value={value} onChange={handleChange} row>
+        <RadioGroup value={gender} onChange={handleChangeGender} row>
           <FormControlLabel
             labelPlacement="start"
             label="Nam"
-            value="female"
+            value={1}
             control={<Radio />}
           />
           <FormControlLabel
             labelPlacement="start"
             label="Nữ"
-            value="male"
+            value={0}
             control={<Radio />}
           />
         </RadioGroup>
+        <TextField
+          type="number"
+          label="Mã số học sinh"
+          margin="normal"
+          variant="outlined"
+          className={classes.textField}
+          {...subId}
+        />
         <TextField
           label="Họ tên học sinh"
           margin="normal"
           variant="outlined"
           className={classes.textField}
+          {...name}
         />
         <TextField
           label="Biệt danh học sinh"
           margin="normal"
           variant="outlined"
           className={classes.textField}
+          {...alias}
         />
         <TextField
           label="Họ tên mẹ"
           margin="normal"
           variant="outlined"
           className={classes.textField}
+          {...mName}
         />
         <TextField
           label="Số điện thoại Mẹ"
@@ -125,12 +186,21 @@ const StudentInput = props => {
             )
           }}
           className={classes.textField}
+          {...mPhone}
+        />
+        <TextField
+          label="Facebook cá nhân mẹ"
+          margin="normal"
+          variant="outlined"
+          className={classes.textField}
+          {...mFB}
         />
         <TextField
           label="Họ tên bố"
           margin="normal"
           variant="outlined"
           className={classes.textField}
+          {...fName}
         />
         <TextField
           label="Số điện thoại Bố"
@@ -143,19 +213,23 @@ const StudentInput = props => {
             )
           }}
           className={classes.textField}
+          {...fPhone}
+        />
+        <TextField
+          label="Facebook cá nhân bố"
+          margin="normal"
+          variant="outlined"
+          className={classes.textField}
+          {...fFB}
         />
         <TextField
           label="Địa chỉ liên hệ"
           margin="normal"
           variant="outlined"
           className={classes.textField}
+          {...address}
         />
-        <TextField
-          label="Facebook cá nhân"
-          margin="normal"
-          variant="outlined"
-          className={classes.textField}
-        />
+
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
           <KeyboardDatePicker
             margin="normal"
@@ -170,31 +244,28 @@ const StudentInput = props => {
             }}
           />
         </MuiPickersUtilsProvider>
-        <Autocomplete
-          freeSolo
+        <TextField
           className={classes.textField}
-          options={note}
-          {...fee}
-          renderInput={params => (
-            <TextField
-              {...params}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">VNĐ</InputAdornment>
-                )
-              }}
-              label="Học phí"
-              margin="normal"
-              variant="outlined"
-              fullWidth
-              onChange={e => {
-                const value = parseInt(e.target.value.replace(/,/g, ""));
-                fee.setValue(formatMoney(value));
-              }}
-            />
-          )}
+          value={fee.value}
+          label="Số tiền"
+          margin="normal"
+          variant="outlined"
+          fullWidth
+          onChange={e => {
+            let v = e.target.value;
+            if (isNaN(v.replace(/,/g, ""))) {
+              v = v.substring(0, v.length - 1);
+            }
+            const value = parseInt(v.replace(/,/g, ""));
+            fee.setValue(formatMoney(value));
+          }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">VNĐ</InputAdornment>
+            )
+          }}
         />
-        <div className={classes.textField}>
+        {/* <div className={classes.textField}>
           <FormControl component="fieldset">
             <FormLabel component="legend">Tính cách của trẻ</FormLabel>
             <FormGroup aria-label="position" row>
@@ -334,15 +405,16 @@ const StudentInput = props => {
           multiline={true}
           rows={2}
           rowsMax={4}
-        />
+        /> */}
         <TextField
-          label="Ghi chú thêm của cô"
+          label="Ghi chú của cô"
           margin="normal"
           variant="outlined"
           className={classes.textField}
           multiline={true}
           rows={2}
           rowsMax={4}
+          {...note}
         />
         <Fab
           variant="extended"
@@ -357,7 +429,7 @@ const StudentInput = props => {
             color: "#fbfefe",
             boxShadow: "none"
           }}
-          onClick={handleClickVariant(props.in ? "success" : "warning")}
+          onClick={addStudent}
         >
           <NavigationIcon className={classes.extendedIcon} />
           {props.update ? "Xác nhận sửa" : "Xác nhận thêm"}

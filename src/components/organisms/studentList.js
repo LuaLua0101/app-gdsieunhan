@@ -1,11 +1,9 @@
-import React, { useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import React, { useState, useEffect } from "react";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
 import Chip from "@material-ui/core/Chip";
 import DeleteIcon from "@material-ui/icons/Delete";
 import Button from "@material-ui/core/Button";
@@ -14,42 +12,67 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
 import { withRouter } from "react-router";
+import axios from "../../utils/axios";
+import { dispatch, useGlobalState } from "../../Store";
+import moment from "moment";
+import { useSnackbar } from "notistack";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const useStyles = makeStyles({
-  root: {
-    width: "100%",
-    overflow: "auto"
-  }
-});
-
 const StudentList = props => {
-  const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [delID, setDelID] = useState();
+  const [loading, setLoading] = useState(false);
+  const [students] = useGlobalState("students");
+  const { enqueueSnackbar } = useSnackbar();
 
-  const handleClickOpen = () => {
+  useEffect(() => {
+    setLoading(true);
+    axios
+      .get("student/list")
+      .then(res => {
+        dispatch({
+          type: "init_students",
+          students: res.data
+        });
+      })
+      .catch()
+      .finally(() => setLoading(false));
+  }, []);
+
+  const remove = id => {
+    setDelID(id);
     setOpen(true);
   };
-
   const handleClose = () => {
     setOpen(false);
   };
 
-  const [data, setData] = useState([
-    { type: 0, total: "100k", time: "hàng ngày" },
-    { type: 1, total: "100k", time: "đầu tháng" }
-  ]);
+  const handleOk = () => {
+    axios
+      .post("student/delete", {
+        id: delID
+      })
+      .then(res => {
+        console.log(res);
+        dispatch({
+          type: "del_students",
+          id: delID
+        });
+        enqueueSnackbar("Xác nhận đã xóa", { variant: "success" });
+      })
+      .catch(err =>
+        enqueueSnackbar(err.message, {
+          variant: "error"
+        })
+      )
+      .finally(() => setOpen(false));
+  };
+
   const renderType = type => {
-    return (
-      <Chip
-        label={type === 0 ? "Thu" : "Chi"}
-        size="small"
-        color={type === 0 ? "primary" : "secondary"}
-      />
-    );
+    return <Chip label={type} size="small" color={"secondary"} />;
   };
 
   return (
@@ -66,26 +89,30 @@ const StudentList = props => {
           }}
         >
           <TableRow>
-            <TableCell>Loại</TableCell>
-            <TableCell>Số tiền</TableCell>
-            <TableCell>Lên lịch</TableCell>
+            <TableCell>Mã số</TableCell>
+            <TableCell>Họ tên</TableCell>
+            <TableCell>Tuổi</TableCell>
             <TableCell>Xóa</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.map(row => (
-            <TableRow onClick={() => props.history.push("/student/1")}>
-              <TableCell>{renderType(row.type)}</TableCell>
-              <TableCell>{row.total}</TableCell>
-              <TableCell>{row.time}</TableCell>
+          {students.map(row => (
+            <TableRow>
+              <TableCell
+                onClick={() => props.history.push("/student/" + row.id)}
+              >
+                {renderType(row.sub_id)}
+              </TableCell>
+              <TableCell>{row.name}</TableCell>
+              <TableCell>{moment().diff(row.dob, "years") + 1}</TableCell>
               <TableCell>
                 <DeleteIcon
                   style={{
-                    color: "#01ca7c",
+                    color: "black",
                     cursor: "pointer",
                     fontSize: 30
                   }}
-                  onClick={handleClickOpen}
+                  onClick={() => remove(row.id)}
                 />
               </TableCell>
             </TableRow>
@@ -103,9 +130,9 @@ const StudentList = props => {
         <DialogTitle id="alert-dialog-slide-title">Xác nhận xóa ?</DialogTitle>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
-            Hủy, không xóa
+            Không xóa
           </Button>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={handleOk} color="primary">
             Xóa luôn
           </Button>
         </DialogActions>

@@ -50,7 +50,7 @@ export default function MoneyHistory() {
       .get("transaction/list")
       .then(res => {
         dispatch({
-          type: "add_transactions",
+          type: "init_transactions",
           transactions: res.data
         });
       })
