@@ -56,7 +56,6 @@ const StudentList = props => {
         id: delID
       })
       .then(res => {
-        console.log(res);
         dispatch({
           type: "del_students",
           id: delID
@@ -97,13 +96,13 @@ const StudentList = props => {
         </TableHead>
         <TableBody>
           {students.map(row => (
-            <TableRow>
+            <TableRow key={row.id}>
+              <TableCell>{row.sub_id && renderType(row.sub_id)}</TableCell>
               <TableCell
                 onClick={() => props.history.push("/student/" + row.id)}
               >
-                {renderType(row.sub_id)}
+                {row.name}
               </TableCell>
-              <TableCell>{row.name}</TableCell>
               <TableCell>{moment().diff(row.dob, "years") + 1}</TableCell>
               <TableCell>
                 <DeleteIcon

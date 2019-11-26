@@ -82,6 +82,7 @@ const MonthChart = props => {
       >
         {months.map(i => (
           <MenuItem
+          key={i}
             onClick={() => {
               setMon(i);
               handleClose();
