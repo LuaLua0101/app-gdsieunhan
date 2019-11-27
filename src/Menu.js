@@ -225,7 +225,7 @@ const Menu = props => {
         </ListItem>
         <Collapse in={menu.student} timeout="auto">
           <List component="div" disablePadding>
-            <ListItem button className={classes.nested}>
+            {/* <ListItem button className={classes.nested}>
               <ListItemIcon>
                 <PlaylistAddCheckIcon />
               </ListItemIcon>
@@ -236,7 +236,7 @@ const Menu = props => {
                   props.history.push("/add-report");
                 }}
               />
-            </ListItem>
+            </ListItem> */}
             <ListItem button className={classes.nested}>
               <ListItemIcon>
                 <GroupIcon />

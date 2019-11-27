@@ -60,6 +60,8 @@ const UserInput = props => {
   const address = useFormInput();
   const email = useFormInput();
   const name = useFormInput();
+  const studentId = useFormInput();
+  const studentName = useFormInput();
   const [gender, setGender] = useState(1);
   const [ID, setID] = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -73,9 +75,11 @@ const UserInput = props => {
         .post("user/detail", { id: parseInt(props.match.params.id) })
         .then(res => {
           console.log(res.data);
-          const { user } = res.data;
+          const { user, student } = res.data;
           setGender(user.gender);
           setID(user.id);
+          studentId.setValue(student.sub_id);
+          studentName.setValue(student.name);
           email.setValue(user.email);
           facebook.setValue(user.facebook);
           salary.setValue(formatMoney(user.salary));
@@ -205,6 +209,30 @@ const UserInput = props => {
           className={classes.textField}
           {...facebook}
         />
+        {props.update && (
+          <>
+            <TextField
+              label="Mã số trẻ"
+              margin="normal"
+              variant="outlined"
+              className={classes.textField}
+              {...studentId}
+              InputProps={{
+                readOnly: true
+              }}
+            />
+            <TextField
+              label="Họ tên trẻ"
+              margin="normal"
+              variant="outlined"
+              className={classes.textField}
+              {...studentName}
+              InputProps={{
+                readOnly: true
+              }}
+            />
+          </>
+        )}
         <Fab
           variant="extended"
           size="medium"

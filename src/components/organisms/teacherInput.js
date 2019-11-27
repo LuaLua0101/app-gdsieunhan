@@ -199,12 +199,75 @@ const TeacherInput = props => {
           {...phone}
         />
         <TextField
+          label="Email giáo viên"
+          margin="normal"
+          variant="outlined"
+          className={classes.textField}
+          {...email}
+        />
+        <TextField
+          label="Địa chỉ giáo viên"
+          margin="normal"
+          variant="outlined"
+          className={classes.textField}
+          {...address}
+        />
+        <TextField
           label="Facebook cá nhân"
           margin="normal"
           variant="outlined"
           className={classes.textField}
           {...facebook}
         />
+        <TextField
+          className={classes.textField}
+          value={salary.value}
+          label="Số tiền"
+          margin="normal"
+          variant="outlined"
+          fullWidth
+          onChange={e => {
+            let v = e.target.value;
+            if (isNaN(v.replace(/,/g, ""))) {
+              v = v.substring(0, v.length - 1);
+            }
+            const value = parseInt(v.replace(/,/g, ""));
+            salary.setValue(formatMoney(value));
+          }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">VNĐ</InputAdornment>
+            )
+          }}
+        />
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+          <KeyboardDatePicker
+            margin="normal"
+            id="date-picker-dialog"
+            label="Ngày sinh"
+            format="dd/MM/yyyy"
+            value={selectedDate}
+            className={classes.textField}
+            onChange={handleDateChange}
+            KeyboardButtonProps={{
+              "aria-label": "change date"
+            }}
+          />
+        </MuiPickersUtilsProvider>
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+          <KeyboardDatePicker
+            margin="normal"
+            id="date-picker-dialog"
+            label="Ngày vào làm"
+            format="dd/MM/yyyy"
+            value={startDate}
+            className={classes.textField}
+            onChange={handleStartDateChange}
+            KeyboardButtonProps={{
+              "aria-label": "change date"
+            }}
+          />
+        </MuiPickersUtilsProvider>
         <Fab
           variant="extended"
           size="medium"
