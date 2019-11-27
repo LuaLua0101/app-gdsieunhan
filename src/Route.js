@@ -8,6 +8,7 @@ const ScheduledPage = DynamicImport(() =>
 );
 const StudentsPage = DynamicImport(() => import("./components/pages/students"));
 const TeachersPage = DynamicImport(() => import("./components/pages/teachers"));
+const UsersPage = DynamicImport(() => import("./components/pages/users"));
 const ChartPage = DynamicImport(() => import("./components/pages/chart"));
 const LoginPage = DynamicImport(() => import("./components/pages/login"));
 const NotFoundPage = DynamicImport(() => import("./components/pages/404"));
@@ -17,6 +18,12 @@ const NotifyManagementPage = DynamicImport(() =>
 );
 const StudentDetailPage = DynamicImport(() =>
   import("./components/pages/studentDetail")
+);
+const TeacherDetailPage = DynamicImport(() =>
+  import("./components/pages/teacherDetail")
+);
+const UserDetailPage = DynamicImport(() =>
+  import("./components/pages/userDetail")
 );
 const DailyReportBookPage = DynamicImport(() =>
   import("./components/pages/dailyReportBook")
@@ -33,9 +40,12 @@ const RouteMap = () => {
       <Route exact path="/scheduled" component={ScheduledPage} />
       <Route exact path="/students" component={StudentsPage} />
       <Route exact path="/teachers" component={TeachersPage} />
+      <Route exact path="/users" component={UsersPage} />
       <Route exact path="/notifies" component={NotifyManagementPage} />
       <Route exact path="/add-report" component={DailyReportBookPage} />
       <Route exact path="/student/:id" component={StudentDetailPage} />
+      <Route exact path="/teacher/:id" component={TeacherDetailPage} />
+      <Route exact path="/user/:id" component={UserDetailPage} />
       <Route component={NotFoundPage} />
     </Switch>
   );

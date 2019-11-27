@@ -67,6 +67,7 @@ const StudentInput = props => {
   const note = useFormInput();
   const name = useFormInput();
   const [gender, setGender] = useState(1);
+  const [ID, setID] = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [loading, setLoading] = useState(false);
 
@@ -77,6 +78,26 @@ const StudentInput = props => {
         .post("student/detail", { id: parseInt(props.match.params.id) })
         .then(res => {
           console.log(res.data);
+          const { student, mom, dad } = res.data;
+          setGender(student.gender);
+          setID(student.id);
+          subId.setValue(student.sub_id);
+          fee.setValue(formatMoney(student.fee));
+          alias.setValue(student.alias);
+          address.setValue(student.address);
+          setSelectedDate(new Date(student.dob));
+          if (mom) {
+            mName.setValue(mom.name);
+            mFB.setValue(mom.facebook);
+            mPhone.setValue(mom.phone);
+          }
+          if (dad) {
+            fPhone.setValue(dad.phone);
+            fName.setValue(dad.name);
+            fFB.setValue(dad.facebook);
+          }
+          note.setValue(student.note);
+          name.setValue(student.name);
         })
         .catch(err =>
           enqueueSnackbar(err.message, {
@@ -96,6 +117,7 @@ const StudentInput = props => {
   };
 
   const clear = () => {
+    subId.setValue("");
     fee.setValue("");
     alias.setValue("");
     mName.setValue("");
@@ -107,15 +129,18 @@ const StudentInput = props => {
     address.setValue("");
     note.setValue("");
     name.setValue("");
+    address.setValue("");
   };
 
   const addStudent = () => {
     setLoading(true);
     axios
-      .post("student/add", {
+      .post(props.update ? "student/update" : "student/add", {
+        id: props.update ? ID : null,
+        sub_id: subId.value,
         name: name.value,
         alias: alias.value,
-        fee: parseInt(fee.value.replace(/,/g, "")),
+        fee: fee.value ? parseInt(fee.value.replace(/,/g, "")) : 0,
         note: note.value,
         gender,
         dob: moment(selectedDate).format("YYYY/MM/DD"),
@@ -124,20 +149,28 @@ const StudentInput = props => {
         mFB: mFB.value,
         fName: fName.value,
         fPhone: fPhone.value,
-        fFB: fFB.value
+        fFB: fFB.value,
+        address: address.value
       })
       .then(res => {
-        dispatch({
-          type: "add_students",
-          students: [
-            {
-              id: res.data.id,
-              created_at: res.data.created_at
-            }
-          ]
-        });
-        clear();
-        enqueueSnackbar("Xác nhận thêm thành công!", { variant: "success" });
+        if (!props.update) {
+          dispatch({
+            type: "add_students",
+            students: [
+              {
+                id: res.data.id,
+                created_at: res.data.created_at
+              }
+            ]
+          });
+          clear();
+        }
+        enqueueSnackbar(
+          props.update
+            ? "Xác nhận cập nhật thành công!"
+            : "Xác nhận thêm thành công!",
+          { variant: "success" }
+        );
       })
       .catch(err =>
         enqueueSnackbar(err.message, {

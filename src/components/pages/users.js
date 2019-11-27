@@ -9,8 +9,7 @@ import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
-const TeacherInput = DynamicImport(() => import("../organisms/teacherInput"));
-const TeacherList = DynamicImport(() => import("../organisms/teacherList"));
+const UserList = DynamicImport(() => import("../organisms/userList"));
 const TypoGreenH5 = DynamicImport(() => import("../atoms/typoGreenH5"));
 
 function TabPanel(props) {
@@ -46,12 +45,12 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const TeachersPage = () => {
+const UsersPage = () => {
   const classes = useStyles();
 
   return (
     <>
-      <ExpansionPanel>
+      {/* <ExpansionPanel>
         <ExpansionPanelSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
@@ -65,16 +64,18 @@ const TeachersPage = () => {
             borderRadius: 0
           }}
         >
-          <Typography className={classes.heading}>Thêm giáo viên</Typography>
+          <Typography className={classes.heading}>
+            Thêm tài khoản phụ huynh
+          </Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
           <TeacherInput />
         </ExpansionPanelDetails>
-      </ExpansionPanel>
-      <TypoGreenH5 text="Danh sách giáo viên" />
-      <TeacherList />
+      </ExpansionPanel> */}
+      <TypoGreenH5 text="Danh sách phụ huynh" />
+      <UserList />
     </>
   );
 };
 
-export default TeachersPage;
+export default UsersPage;

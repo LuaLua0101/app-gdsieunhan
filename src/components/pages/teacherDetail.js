@@ -7,10 +7,7 @@ import PropTypes from "prop-types";
 import Typography from "@material-ui/core/Typography";
 import DynamicImport from "../../utils/lazyImport";
 
-const StudentInput = DynamicImport(() => import("../organisms/studentInput"));
-const HistoryOfObservation = DynamicImport(() =>
-  import("../templates/historyOfObservation")
-);
+const TeacherInput = DynamicImport(() => import("../organisms/teacherInput"));
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -35,7 +32,7 @@ TabPanel.propTypes = {
   value: PropTypes.any.isRequired
 };
 
-export default function StudentDetail() {
+export default function TeacherDetail() {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -56,12 +53,11 @@ export default function StudentDetail() {
         aria-label="disabled tabs example"
       >
         <Tab label="Thông tin" />
-        <Tab label="Kế hoạch" />
-        {/* <Tab label="Lịch sử theo dõi" /> */}
+        <Tab label="Báng chấm công" />
       </Tabs>
       <SwipeableViews index={value} onChangeIndex={handleChangeIndex}>
         <TabPanel value={value} index={0}>
-          <StudentInput update />
+          <TeacherInput update />
         </TabPanel>
         <TabPanel value={value} index={1}>
           Phần này chưa làm xong
