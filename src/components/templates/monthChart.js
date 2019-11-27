@@ -136,7 +136,9 @@ const MonthChart = props => {
         onClose={handleClose}
       >
         {months.map(i => (
-          <MenuItem onClick={() => getChart(i)}>Tháng {i}</MenuItem>
+          <MenuItem key={i} onClick={() => getChart(i)}>
+            Tháng {i}
+          </MenuItem>
         ))}
       </StyledMenu>
       <br />

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Fab from "@material-ui/core/Fab";
@@ -18,6 +18,7 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import axios from "../../utils/axios";
 import { dispatch, useGlobalState } from "../../Store";
 import moment from "moment";
+import { withRouter } from "react-router";
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -68,6 +69,23 @@ const StudentInput = props => {
   const [gender, setGender] = useState(1);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (props.update) {
+      setLoading(true);
+      axios
+        .post("student/detail", { id: parseInt(props.match.params.id) })
+        .then(res => {
+          console.log(res.data);
+        })
+        .catch(err =>
+          enqueueSnackbar(err.message, {
+            variant: "error"
+          })
+        )
+        .finally(() => setLoading(false));
+    }
+  }, []);
 
   const handleDateChange = date => {
     setSelectedDate(date);
@@ -439,4 +457,4 @@ const StudentInput = props => {
   );
 };
 
-export default StudentInput;
+export default withRouter(StudentInput);
