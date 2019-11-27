@@ -1,12 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   XYPlot,
   XAxis,
   YAxis,
   VerticalGridLines,
   HorizontalGridLines,
-  VerticalBarSeries,
-  LabelSeries
+  VerticalBarSeries
 } from "react-vis";
 import EqualizerIcon from "@material-ui/icons/Equalizer";
 import Button from "@material-ui/core/Button";
@@ -16,6 +15,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
+import moment from "moment";
+import axios from "../../utils/axios";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -46,9 +47,13 @@ const StyledMenu = withStyles({
 const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 const MonthChart = props => {
   const classes = useStyles();
-
+  const [loading, setLoading] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mon, setMon] = React.useState(null);
+  const [transactions, setTransactions] = useState();
+  const [countIncome, setCountIncome] = useState(0);
+  const [countOutcome, setCountOutcome] = useState(0);
+  const [days, setDays] = useState(0);
 
   const handleClick = event => {
     setAnchorEl(event.currentTarget);
@@ -57,7 +62,57 @@ const MonthChart = props => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  return (
+
+  const count = _transactions => {
+    let income = 0;
+    let outcome = 0;
+    if (_transactions) {
+      Object.keys(_transactions).forEach(i => {
+        _transactions[i].forEach(row => {
+          if (row.type === 0) income += row.fee;
+          else if (row.type === 1) outcome += row.fee;
+        });
+      });
+    }
+    setCountIncome(income.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,"));
+    setCountOutcome(
+      outcome.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+    );
+  };
+
+  const getHistories = (from, to) => {
+    setLoading(true);
+    axios
+      .post("transaction/histories", {
+        from,
+        to
+      })
+      .then(res => {
+        console.log(res.data);
+        setTransactions(res.data);
+        count(res.data);
+      })
+      .catch(err => console.log(err))
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  const getChart = i => {
+    setMon(i);
+    handleClose();
+    //get current year
+    const year = moment().year();
+    //get total days
+    setDays(moment(year + "-" + i, "YYYY-MM").daysInMonth());
+    const from = moment(year + "/" + i + "/1").format("YYYY/MM/DD");
+    const to = moment(year + "/" + i + "/" + days).format("YYYY/MM/DD");
+    getHistories(from, to);
+  };
+
+  return loading ? (
+    "loading"
+  ) : (
     <>
       <Button
         aria-controls="simple-menu"
@@ -81,14 +136,7 @@ const MonthChart = props => {
         onClose={handleClose}
       >
         {months.map(i => (
-          <MenuItem
-            onClick={() => {
-              setMon(i);
-              handleClose();
-            }}
-          >
-            Tháng {i}
-          </MenuItem>
+          <MenuItem onClick={() => getChart(i)}>Tháng {i}</MenuItem>
         ))}
       </StyledMenu>
       <br />
@@ -112,74 +160,8 @@ const MonthChart = props => {
               <HorizontalGridLines />
               <XAxis tickLabelAngle={-45} />
               <YAxis />
-              <VerticalBarSeries
-                data={[
-                  { x: "1/10", y: 10 },
-                  { x: "2/10", y: 5 },
-                  { x: "3/10", y: 15 },
-                  { x: "4/10", y: 10 },
-                  { x: "5/10", y: 5 },
-                  { x: "6/10", y: 15 },
-                  { x: "7/10", y: 10 },
-                  { x: "8/10", y: 5 },
-                  { x: "9/10", y: 15 },
-                  { x: "10/10", y: 10 },
-                  { x: "11/10", y: 5 },
-                  { x: "12/10", y: 15 },
-                  { x: "13/10", y: 10 },
-                  { x: "14/10", y: 5 },
-                  { x: "15/10", y: 15 },
-                  { x: "16/10", y: 10 },
-                  { x: "17/10", y: 5 },
-                  { x: "18/10", y: 15 },
-                  { x: "19/10", y: 10 },
-                  { x: "20/10", y: 5 },
-                  { x: "21/10", y: 15 },
-                  { x: "22/10", y: 10 },
-                  { x: "23/10", y: 5 },
-                  { x: "24/10", y: 15 },
-                  { x: "25/10", y: 10 },
-                  { x: "26/10", y: 5 },
-                  { x: "27/10", y: 15 },
-                  { x: "28/10", y: 10 },
-                  { x: "29/10", y: 5 },
-                  { x: "30/10", y: 15 }
-                ]}
-              />
-              <VerticalBarSeries
-                data={[
-                  { x: "1/10", y: 10 },
-                  { x: "2/10", y: 5 },
-                  { x: "3/10", y: 15 },
-                  { x: "4/10", y: 10 },
-                  { x: "5/10", y: 5 },
-                  { x: "6/10", y: 15 },
-                  { x: "7/10", y: 10 },
-                  { x: "8/10", y: 5 },
-                  { x: "9/10", y: 15 },
-                  { x: "10/10", y: 10 },
-                  { x: "11/10", y: 5 },
-                  { x: "12/10", y: 15 },
-                  { x: "13/10", y: 10 },
-                  { x: "14/10", y: 5 },
-                  { x: "15/10", y: 15 },
-                  { x: "16/10", y: 10 },
-                  { x: "17/10", y: 5 },
-                  { x: "18/10", y: 15 },
-                  { x: "19/10", y: 10 },
-                  { x: "20/10", y: 5 },
-                  { x: "21/10", y: 15 },
-                  { x: "22/10", y: 10 },
-                  { x: "23/10", y: 5 },
-                  { x: "24/10", y: 15 },
-                  { x: "25/10", y: 10 },
-                  { x: "26/10", y: 5 },
-                  { x: "27/10", y: 15 },
-                  { x: "28/10", y: 10 },
-                  { x: "29/10", y: 5 },
-                  { x: "30/10", y: 15 }
-                ]}
-              />
+              <VerticalBarSeries data={[{ x: "1/10", y: 10 }]} />
+              <VerticalBarSeries data={[{ x: "1/10", y: 2 }]} />
             </XYPlot>
           </div>
           <Paper
@@ -196,7 +178,7 @@ const MonthChart = props => {
             <Typography variant="h5" component="h3">
               Tổng thu nhập tháng {mon}
             </Typography>
-            <Typography component="p">100,000,000 vnđ</Typography>
+            <Typography component="p">{countIncome} vnđ</Typography>
           </Paper>
           <Paper
             className={classes.root}
@@ -212,7 +194,7 @@ const MonthChart = props => {
             <Typography variant="h5" component="h3">
               Tổng chi tiêu tháng {mon}
             </Typography>
-            <Typography component="p">500,000,000 vnđ</Typography>
+            <Typography component="p">{countOutcome} vnđ</Typography>
           </Paper>
         </>
       )}
