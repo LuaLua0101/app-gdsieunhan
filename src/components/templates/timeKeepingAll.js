@@ -9,6 +9,7 @@ import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
 import Slide from "@material-ui/core/Slide";
 import { withRouter } from "react-router";
 import axios from "../../utils/axios";
@@ -25,7 +26,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const TimeKeepingAll = props => {
   const [open, setOpen] = useState(false);
-  const [delID, setDelID] = useState();
+  const [tID, setTID] = useState();
   const [loading, setLoading] = useState(false);
   const [timekeeping] = useGlobalState("timekeeping");
   const { enqueueSnackbar } = useSnackbar();
@@ -45,8 +46,8 @@ const TimeKeepingAll = props => {
       .finally(() => setLoading(false));
   }, []);
 
-  const remove = id => {
-    setDelID(id);
+  const edit = id => {
+    setTID(id);
     setOpen(true);
   };
 
@@ -60,14 +61,16 @@ const TimeKeepingAll = props => {
         id
       })
       .then(res => {
-        if (res.data === 200) {
-          dispatch({
-            type: "add_timekeeping",
-            id,
-            checkin: { tid: 1, date: "2/2/2", checkin: "1:1", checkout: "2:2" }
-          });
-          enqueueSnackbar("Xác nhận đã chấm công", { variant: "success" });
-        }
+        console.log(res.data.checkin);
+        dispatch({
+          type: "add_timekeeping",
+          id,
+          checkin: {
+            tid: res.data.checkin.id,
+            ...res.data.checkin
+          }
+        });
+        enqueueSnackbar("Xác nhận đã chấm công", { variant: "success" });
       })
       .catch(err =>
         enqueueSnackbar(err.message, {
@@ -102,12 +105,12 @@ const TimeKeepingAll = props => {
   const handleOk = () => {
     axios
       .post("user/delete", {
-        id: delID
+        id: tID
       })
       .then(res => {
         dispatch({
           type: "del_timekeeping",
-          id: delID
+          id: tID
         });
         enqueueSnackbar("Xác nhận đã xóa", { variant: "success" });
       })
@@ -186,6 +189,7 @@ const TimeKeepingAll = props => {
                     cursor: "pointer",
                     fontSize: 30
                   }}
+                  onClick={() => edit(row.checkin.tid)}
                 />
               </TableCell>
             </TableRow>
@@ -200,13 +204,16 @@ const TimeKeepingAll = props => {
         aria-labelledby="alert-dialog-slide-title"
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle id="alert-dialog-slide-title">Xác nhận xóa ?</DialogTitle>
+        <DialogTitle id="alert-dialog-slide-title">
+          Thay đổi giờ checkin/checkout
+        </DialogTitle>
+        <DialogContent>1234</DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
-            Không xóa
+            Hủy
           </Button>
           <Button onClick={handleOk} color="primary">
-            Xóa luôn
+            Thay đổi
           </Button>
         </DialogActions>
       </Dialog>
