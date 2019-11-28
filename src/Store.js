@@ -7,7 +7,8 @@ const initialState = {
   notifies: [],
   students: [],
   teachers: [],
-  users: []
+  users: [],
+  timekeeping: []
 };
 
 var logger = function(_a) {

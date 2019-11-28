@@ -273,6 +273,18 @@ const Menu = props => {
                 }}
               />
             </ListItem>
+            <ListItem button className={classes.nested}>
+              <ListItemIcon>
+                <PeopleOutlineIcon />
+              </ListItemIcon>
+              <ListItemText
+                primary="Chấm công giáo viên"
+                onClick={() => {
+                  props.close();
+                  props.history.push("/time-keeping");
+                }}
+              />
+            </ListItem>
           </List>
         </Collapse>
         <Divider />

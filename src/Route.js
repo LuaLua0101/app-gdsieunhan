@@ -13,6 +13,9 @@ const ChartPage = DynamicImport(() => import("./components/pages/chart"));
 const LoginPage = DynamicImport(() => import("./components/pages/login"));
 const NotFoundPage = DynamicImport(() => import("./components/pages/404"));
 const NotifyPage = DynamicImport(() => import("./components/pages/notify"));
+const TimekeepingPage = DynamicImport(() =>
+  import("./components/pages/timeKeeping")
+);
 const NotifyManagementPage = DynamicImport(() =>
   import("./components/pages/notifyManagement")
 );
@@ -42,6 +45,7 @@ const RouteMap = () => {
       <Route exact path="/teachers" component={TeachersPage} />
       <Route exact path="/users" component={UsersPage} />
       <Route exact path="/notifies" component={NotifyManagementPage} />
+      <Route exact path="/time-keeping" component={TimekeepingPage} />
       <Route exact path="/add-report" component={DailyReportBookPage} />
       <Route exact path="/student/:id" component={StudentDetailPage} />
       <Route exact path="/teacher/:id" component={TeacherDetailPage} />
