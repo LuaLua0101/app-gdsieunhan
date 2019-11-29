@@ -12,8 +12,21 @@ export default function companyReducer(state = initState, action) {
       const _newState = state.map(obj =>
         obj.id === action.id ? { ...obj, checkin: null } : obj
       );
-      console.log(_newState);
       return [..._newState];
+    case "edit_timekeeping":
+      const __newState = state.map(obj =>
+        obj.checkin && obj.checkin.tid === action.id
+          ? {
+              ...obj,
+              checkin: {
+                ...obj.checkin,
+                checkin: action.checkin,
+                checkout: action.checkout
+              }
+            }
+          : obj
+      );
+      return [...__newState];
     default:
       return state;
   }

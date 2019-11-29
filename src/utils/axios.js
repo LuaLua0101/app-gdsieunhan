@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:8080/api-gdsieunhan/api/";
+const API_URL = "http://localhost/api-gdsieunhan/api/";
 // const API_URL =
 //   "https://iht-cors-server.herokuapp.com/http://139.180.195.15/api-gdsieunhan/api/";
 
