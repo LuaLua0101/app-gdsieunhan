@@ -9,8 +9,8 @@ import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
-const TeacherInput = DynamicImport(() => import("../organisms/teacherInput"));
-const TeacherList = DynamicImport(() => import("../organisms/teacherList"));
+const TeacherInput = DynamicImport(() => import("../templates/teacherInput"));
+const TeacherList = DynamicImport(() => import("../templates/teacherList"));
 const TypoGreenH5 = DynamicImport(() => import("../atoms/typoGreenH5"));
 
 function TabPanel(props) {

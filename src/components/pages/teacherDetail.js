@@ -1,5 +1,4 @@
 import React from "react";
-import Paper from "@material-ui/core/Paper";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import SwipeableViews from "react-swipeable-views";
@@ -7,7 +6,10 @@ import PropTypes from "prop-types";
 import Typography from "@material-ui/core/Typography";
 import DynamicImport from "../../utils/lazyImport";
 
-const TeacherInput = DynamicImport(() => import("../organisms/teacherInput"));
+const TeacherInput = DynamicImport(() => import("../templates/teacherInput"));
+const TimeKeepingDetail = DynamicImport(() =>
+  import("../templates/timeKeepingDetail")
+);
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -60,7 +62,7 @@ export default function TeacherDetail() {
           <TeacherInput update />
         </TabPanel>
         <TabPanel value={value} index={1}>
-          Phần này chưa làm xong
+          <TimeKeepingDetail />
         </TabPanel>
       </SwipeableViews>
     </>

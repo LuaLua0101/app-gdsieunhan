@@ -46,6 +46,7 @@ const TeacherList = props => {
     setDelID(id);
     setOpen(true);
   };
+
   const handleClose = () => {
     setOpen(false);
   };

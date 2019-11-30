@@ -7,7 +7,7 @@ import PropTypes from "prop-types";
 import Typography from "@material-ui/core/Typography";
 import DynamicImport from "../../utils/lazyImport";
 
-const StudentInput = DynamicImport(() => import("../organisms/studentInput"));
+const StudentInput = DynamicImport(() => import("../templates/studentInput"));
 const HistoryOfObservation = DynamicImport(() =>
   import("../templates/historyOfObservation")
 );

@@ -7,7 +7,7 @@ import PropTypes from "prop-types";
 import Typography from "@material-ui/core/Typography";
 import DynamicImport from "../../utils/lazyImport";
 
-const UserInput = DynamicImport(() => import("../organisms/userInput"));
+const UserInput = DynamicImport(() => import("../templates/userInput"));
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -53,15 +53,11 @@ export default function UserDetail() {
         aria-label="disabled tabs example"
       >
         <Tab label="Thông tin phụ huynh" />
-        {/* <Tab label="Báng chấm công" /> */}
       </Tabs>
       <SwipeableViews index={value} onChangeIndex={handleChangeIndex}>
         <TabPanel value={value} index={0}>
           <UserInput update />
         </TabPanel>
-        {/* <TabPanel value={value} index={1}>
-          Phần này chưa làm xong
-        </TabPanel> */}
       </SwipeableViews>
     </>
   );
