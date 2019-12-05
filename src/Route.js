@@ -31,6 +31,10 @@ const UserDetailPage = DynamicImport(() =>
 const DailyReportBookPage = DynamicImport(() =>
   import("./components/pages/dailyReportBook")
 );
+const SkillsPage = DynamicImport(() => import("./components/pages/skills"));
+const SkillGroupsPage = DynamicImport(() =>
+  import("./components/pages/skillGroups")
+);
 
 const RouteMap = () => {
   return (
@@ -50,6 +54,8 @@ const RouteMap = () => {
       <Route exact path="/student/:id" component={StudentDetailPage} />
       <Route exact path="/teacher/:id" component={TeacherDetailPage} />
       <Route exact path="/user/:id" component={UserDetailPage} />
+      <Route exact path="/skills" component={SkillsPage} />
+      <Route exact path="/skill-groups" component={SkillGroupsPage} />
       <Route component={NotFoundPage} />
     </Switch>
   );

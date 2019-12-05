@@ -17,7 +17,6 @@ import AddIcon from "@material-ui/icons/Add";
 import ShowChartIcon from "@material-ui/icons/ShowChart";
 import NotificationsActiveIcon from "@material-ui/icons/NotificationsActive";
 import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
-import PlaylistAddCheckIcon from "@material-ui/icons/PlaylistAddCheck";
 import GroupIcon from "@material-ui/icons/Group";
 import PersonOutlineIcon from "@material-ui/icons/PersonOutline";
 import PersonIcon from "@material-ui/icons/Person";
@@ -49,6 +48,9 @@ const useStyles = makeStyles(theme => ({
   },
   nested: {
     paddingLeft: theme.spacing(4)
+  },
+  nested2: {
+    paddingLeft: theme.spacing(8)
   }
 }));
 
@@ -87,6 +89,21 @@ const Menu = props => {
       setMenu({
         ...menu,
         parent: !menu.parent
+      });
+    else if (seq === 6)
+      setMenu({
+        ...menu,
+        training: !menu.training
+      });
+    else if (seq === 61)
+      setMenu({
+        ...menu,
+        skill_group: !menu.skill_group
+      });
+    else if (seq === 62)
+      setMenu({
+        ...menu,
+        skill: !menu.skill
       });
   };
 
@@ -312,7 +329,75 @@ const Menu = props => {
           </List>
         </Collapse>
         <Divider />
-        <ListItem>
+        <ListItem button onClick={() => handleClick(6)}>
+          <ListItemIcon>
+            <PersonIcon />
+          </ListItemIcon>
+          <ListItemText primary="Kỹ năng rèn luyện" />
+          {menu.training ? <ExpandLess /> : <ExpandMore />}
+        </ListItem>
+        <Collapse in={menu.training} timeout="auto">
+          <List component="div" disablePadding>
+            <ListItem
+              button
+              className={classes.nested}
+              onClick={() => handleClick(61)}
+            >
+              <ListItemIcon>
+                <PersonIcon />
+              </ListItemIcon>
+              <ListItemText primary="Nhóm kỹ năng" />
+              {menu.skill_group ? <ExpandLess /> : <ExpandMore />}
+            </ListItem>
+            <Collapse in={menu.skill_group} timeout="auto">
+              <List component="div" disablePadding>
+                <ListItem button className={classes.nested2}>
+                  <ListItemIcon>
+                    <GroupIcon />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="Danh sách nhóm kỹ năng"
+                    onClick={() => {
+                      props.close();
+                      props.history.push("/skill-groups");
+                    }}
+                  />
+                </ListItem>
+              </List>
+            </Collapse>
+            <Divider />
+            <ListItem
+              button
+              className={classes.nested}
+              onClick={() => handleClick(62)}
+            >
+              <ListItemIcon>
+                <PersonIcon />
+              </ListItemIcon>
+              <ListItemText primary="Kỹ năng" />
+              {menu.skill ? <ExpandLess /> : <ExpandMore />}
+            </ListItem>
+            <Collapse in={menu.skill} timeout="auto">
+              <List component="div" disablePadding>
+                <ListItem button className={classes.nested2}>
+                  <ListItemIcon>
+                    <GroupIcon />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary="Danh sách kỹ năng"
+                    onClick={() => {
+                      props.close();
+                      props.history.push("/skills");
+                    }}
+                  />
+                </ListItem>
+              </List>
+            </Collapse>
+            <Divider />
+          </List>
+        </Collapse>
+        <Divider />
+        <ListItem style={{ cursor: "pointer" }}>
           <ListItemIcon>
             <ExitToAppIcon />
           </ListItemIcon>
