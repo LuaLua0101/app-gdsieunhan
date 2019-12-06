@@ -9,7 +9,8 @@ const initialState = {
   teachers: [],
   users: [],
   timekeeping: [],
-  skillGroups: []
+  skillGroups: [],
+  skills: []
 };
 
 var logger = function(_a) {

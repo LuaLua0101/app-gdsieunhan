@@ -1,5 +1,4 @@
 import React from "react";
-import Paper from "@material-ui/core/Paper";
 import PropTypes from "prop-types";
 import Typography from "@material-ui/core/Typography";
 import DynamicImport from "../../utils/lazyImport";
@@ -9,8 +8,8 @@ import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
-const TeacherInput = DynamicImport(() => import("../templates/teacherInput"));
-const TeacherList = DynamicImport(() => import("../templates/teacherList"));
+const SkillInput = DynamicImport(() => import("../templates/skillInput"));
+const SkillList = DynamicImport(() => import("../templates/skillList"));
 const TypoGreenH5 = DynamicImport(() => import("../atoms/typoGreenH5"));
 
 function TabPanel(props) {
@@ -65,14 +64,14 @@ const SkillsPage = props => {
             borderRadius: 0
           }}
         >
-          <Typography className={classes.heading}>Thêm giáo viên</Typography>
+          <Typography className={classes.heading}>Thêm kỹ năng mới</Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
-          <TeacherInput />
+          <SkillInput />
         </ExpansionPanelDetails>
       </ExpansionPanel>
-      <TypoGreenH5 text="Danh sách giáo viên" />
-      <TeacherList />
+      <TypoGreenH5 text="Danh sách kỹ năng" />
+      <SkillList />
     </>
   );
 };

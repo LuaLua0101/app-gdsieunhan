@@ -155,6 +155,7 @@ const UserInput = props => {
             : "Xác nhận thêm thành công!",
           { variant: "success" }
         );
+        props.update && props.history.push("/users");
       })
       .catch(err =>
         enqueueSnackbar(err.message, {

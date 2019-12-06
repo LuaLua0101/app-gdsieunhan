@@ -4,13 +4,15 @@ import TextField from "@material-ui/core/TextField";
 import Fab from "@material-ui/core/Fab";
 import NavigationIcon from "@material-ui/icons/Done";
 import useFormInput from "../../utils/useFormInput";
+import useFormDropdown from "../../utils/useFormDropdown";
 import { useSnackbar } from "notistack";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import axios from "../../utils/axios";
 import { dispatch } from "../../Store";
 import { withRouter } from "react-router";
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -37,24 +39,27 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const SkillGroupInput = props => {
+const SkillInput = props => {
   const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
-  const name = useFormInput();
-  const [type, setType] = useState(1);
-  const [ID, setID] = useState(null);
+  const content = useFormInput();
+  const group = useFormDropdown();
+  const [ID, setID] = useState();
   const [loading, setLoading] = useState(false);
+  const [skillGroups, setSkillGroups] = useState();
+  const inputLabel = React.useRef(null);
+  const [labelWidth, setLabelWidth] = useState(0);
 
   useEffect(() => {
     if (props.update) {
       setLoading(true);
       axios
-        .post("skill-group/detail", { id: parseInt(props.match.params.id) })
+        .post("skill/detail", { id: parseInt(props.match.params.id) })
         .then(res => {
           const { skill } = res.data;
           setID(skill.id);
-          name.setValue(skill.name);
-          setType(skill.group_type_id);
+          content.setValue(skill.content);
+          group.setValue(skill.group_id);
         })
         .catch(err =>
           enqueueSnackbar(err.message, {
@@ -63,33 +68,42 @@ const SkillGroupInput = props => {
         )
         .finally(() => setLoading(false));
     }
+    axios
+      .get("skill-group/list")
+      .then(res => {
+        setSkillGroups(res.data);
+      })
+      .catch(err =>
+        enqueueSnackbar(err.message, {
+          variant: "error"
+        })
+      );
   }, []);
 
-  const handleChangeType = event => {
-    setType(parseInt(event.target.value));
-  };
-
   const clear = () => {
-    name.setValue("");
+    content.setValue("");
   };
 
   const addTeacher = () => {
     setLoading(true);
     axios
-      .post(props.update ? "skill-group/update" : "skill-group/add", {
+      .post(props.update ? "skill/update" : "skill/add", {
         id: props.update ? ID : null,
-        name: name.value,
-        type
+        content: content.value,
+        group: group.value
       })
       .then(res => {
         if (!props.update) {
+          const _group = skillGroups.find(item => {
+            return item.id === group.value;
+          });
           dispatch({
-            type: "add_skill_groups",
-            skill_groups: [
+            type: "add_skills",
+            skills: [
               {
                 id: res.data.id,
-                name: name.value,
-                group_type_id: type
+                content: content.value,
+                name: _group.name
               }
             ]
           });
@@ -101,7 +115,7 @@ const SkillGroupInput = props => {
             : "Xác nhận thêm thành công!",
           { variant: "success" }
         );
-        props.update && props.history.push("/skill-groups");
+        props.update && props.history.push("/skills");
       })
       .catch(err =>
         enqueueSnackbar(err.message, {
@@ -114,26 +128,30 @@ const SkillGroupInput = props => {
   return (
     <>
       <form className={classes.container} noValidate autoComplete="off">
-        <RadioGroup value={type} onChange={handleChangeType} row>
-          <FormControlLabel
-            labelPlacement="start"
-            label="Thang phát triển"
-            value={1}
-            control={<Radio />}
-          />
-          <FormControlLabel
-            labelPlacement="start"
-            label="Thang hành vi"
-            value={0}
-            control={<Radio />}
-          />
-        </RadioGroup>
+        <FormControl variant="outlined" className={classes.formControl}>
+          <InputLabel ref={inputLabel} id="demo-simple-select-outlined-label">
+            Chọn nhóm kỹ năng
+          </InputLabel>
+          <Select
+            labelId="demo-simple-select-outlined-label"
+            id="demo-simple-select-outlined"
+            {...group}
+            labelWidth={labelWidth}
+          >
+            {skillGroups &&
+              skillGroups.map((item, index) => (
+                <MenuItem key={index} value={item.id}>
+                  {item.name}
+                </MenuItem>
+              ))}
+          </Select>
+        </FormControl>
         <TextField
-          label="Nhóm kỹ năng"
+          label="Kỹ năng"
           margin="normal"
           variant="outlined"
           className={classes.textField}
-          {...name}
+          {...content}
         />
         <Fab
           variant="extended"
@@ -151,11 +169,11 @@ const SkillGroupInput = props => {
           onClick={addTeacher}
         >
           <NavigationIcon className={classes.extendedIcon} />
-          {props.update ? "Sửa thông tin" : "Thêm nhóm kỹ năng"}
+          {props.update ? "Sửa thông tin" : "Thêm kỹ năng"}
         </Fab>
       </form>
     </>
   );
 };
 
-export default withRouter(SkillGroupInput);
+export default withRouter(SkillInput);

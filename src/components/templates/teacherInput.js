@@ -151,6 +151,7 @@ const TeacherInput = props => {
             : "Xác nhận thêm thành công!",
           { variant: "success" }
         );
+        props.update && props.history.push("/teachers");
       })
       .catch(err =>
         enqueueSnackbar(err.message, {

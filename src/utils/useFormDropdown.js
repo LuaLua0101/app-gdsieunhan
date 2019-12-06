@@ -4,7 +4,7 @@ const useFormDropdown = (init = "") => {
   const [value, setValue] = useState(init);
 
   function handleChange(e, item) {
-    setValue(item.key);
+    setValue(e.target.value);
   }
 
   return {

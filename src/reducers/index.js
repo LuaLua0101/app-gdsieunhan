@@ -6,6 +6,7 @@ import teachers from "./teachers";
 import users from "./users";
 import timekeeping from "./timekeeping";
 import skillGroups from "./skillGroups";
+import skills from "./skills";
 
 const reducer = combineReducers({
   transactions: transactions,
@@ -14,7 +15,8 @@ const reducer = combineReducers({
   teachers: teachers,
   users: users,
   timekeeping: timekeeping,
-  skillGroups: skillGroups
+  skillGroups: skillGroups,
+  skills: skills
 });
 
 export default reducer;

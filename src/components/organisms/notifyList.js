@@ -22,6 +22,7 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
+import Fab from "@material-ui/core/Fab";
 
 const Detail = DynamicImport(() => import("../templates/notifyDetail"));
 
@@ -45,6 +46,7 @@ export default function NotifyList() {
   });
   const [notifies] = useGlobalState("notifies");
   const [loading, setLoading] = useState(false);
+  const [pinned, setPinned] = useState([]);
   const [delID, setDelID] = useState();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -60,6 +62,13 @@ export default function NotifyList() {
       })
       .catch()
       .finally(() => setLoading(false));
+
+    axios
+      .get("notify/pinned-list")
+      .then(res => {
+        setPinned(res.data);
+      })
+      .catch();
   }, []);
 
   const handleClickOpen = () => {
@@ -141,6 +150,84 @@ export default function NotifyList() {
     </Dialog>
   );
 
+  const unpin = id => {
+    console.log(id);
+    axios
+      .post("notify/unpin", {
+        id
+      })
+      .then(res => {
+        setPinned(
+          pinned.filter((value, index, arr) => {
+            return value.id !== id;
+          })
+        );
+        enqueueSnackbar("Đã bỏ ghim thông báo", { variant: "success" });
+      })
+      .catch(err =>
+        enqueueSnackbar(err.message, {
+          variant: "error"
+        })
+      );
+  };
+  const pin = notify_id => {
+    console.log(notify_id);
+    axios
+      .post("notify/pin", {
+        id: notify_id
+      })
+      .then(res => {
+        setPinned([
+          ...pinned,
+          {
+            id: res.id,
+            notify_id
+          }
+        ]);
+        enqueueSnackbar("Đã ghim thông báo", { variant: "success" });
+      })
+      .catch(err =>
+        enqueueSnackbar(err.message, {
+          variant: "error"
+        })
+      );
+  };
+
+  const renderPinIcon = id => {
+    const res = pinned.find(item => {
+      return item.notify_id === id;
+    });
+    return res ? (
+      <BookmarkIcon
+        style={{
+          color: "#01ca7c",
+          cursor: "pointer",
+          fontSize: 30
+        }}
+        onClick={() => unpin(res.id)}
+      />
+    ) : (
+      <Fab
+        variant="extended"
+        size="medium"
+        color="primary"
+        aria-label="add"
+        className={classes.margin}
+        style={{
+          display: "flex",
+          backgroundColor: "#44cbdf",
+          backgroundImage: "linear-gradient(141deg,  #44cbdf 15%, #01ca7c 85%)",
+          color: "#fbfefe",
+          boxShadow: "none"
+        }}
+        onClick={() => pin(id)}
+      >
+        <BookmarkIcon className={classes.extendedIcon} />
+        Ghim
+      </Fab>
+    );
+  };
+
   return (
     <>
       <Table className={classes.table} aria-label="simple table">
@@ -179,18 +266,7 @@ export default function NotifyList() {
               <TableCell>
                 {moment(row.active_date).format("DD/MM/YY")}
               </TableCell>
-              <TableCell>
-                {row.pin === 1 && (
-                  <BookmarkIcon
-                    style={{
-                      color: "#01ca7c",
-                      cursor: "pointer",
-                      fontSize: 30
-                    }}
-                    onClick={handleClickOpen}
-                  />
-                )}
-              </TableCell>
+              <TableCell>{renderPinIcon(row.id)}</TableCell>
               <TableCell>
                 <DeleteIcon
                   style={{

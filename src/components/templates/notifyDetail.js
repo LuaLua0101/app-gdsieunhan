@@ -5,6 +5,7 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import Typography from "@material-ui/core/Typography";
 import axios from "../../utils/axios";
+import { withRouter } from "react-router";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -18,29 +19,36 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function NotifyDetail(props) {
+const NotifyDetail = props => {
   const classes = useStyles();
   const [loading, setLoading] = useState(false);
   const [notify, setNotify] = useState({});
 
   useEffect(() => {
-    if (props.id) {
+    if (props.type) {
       setLoading(true);
+      const url =
+        props.type === "gv"
+          ? "notify/teacher-list"
+          : props.type === "ph"
+          ? "notify/parent-list"
+          : props.history.goBack();
       axios
-        .post("notify/detail", {
-          id: props.id
-        })
+        .get(url)
         .then(res => {
+          if (res.data.data && res.data.data.length === 0)
+            props.history.goBack();
+          const data = res.data.data[0];
+          console.log(data);
           setNotify({
-            ...res.data.notify,
-            detail: res.data.detail
+            ...data.notify,
+            detail: data.detail
           });
-          console.log(res.data);
         })
         .catch()
         .finally(() => setLoading(false));
     }
-  }, [props.id]);
+  }, [props.type]);
 
   return (
     <List className={classes.root}>
@@ -79,4 +87,5 @@ export default function NotifyDetail(props) {
       </ListItem>
     </List>
   );
-}
+};
+export default withRouter(NotifyDetail);
