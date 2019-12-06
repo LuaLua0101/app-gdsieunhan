@@ -22,7 +22,8 @@ const useStyles = makeStyles(theme => ({
 const NotifyDetail = props => {
   const classes = useStyles();
   const [loading, setLoading] = useState(false);
-  const [notify, setNotify] = useState({});
+  const [notify, setNotify] = useState(null);
+  const [detail, setDetail] = useState([]);
 
   useEffect(() => {
     if (props.type) {
@@ -38,12 +39,21 @@ const NotifyDetail = props => {
         .then(res => {
           if (res.data.data && res.data.data.length === 0)
             props.history.goBack();
-          const data = res.data.data[0];
-          console.log(data);
-          setNotify({
-            ...data.notify,
-            detail: data.detail
-          });
+          else {
+            const data = res.data.data[0];
+            console.log(data);
+            setNotify(data);
+            axios
+              .post("notify/detail", {
+                id: data.notify_id
+              })
+              .then(res => {
+                console.log(res.data);
+                setDetail(res.data.detail);
+              })
+              .catch()
+              .finally(() => setLoading(false));
+          }
         })
         .catch()
         .finally(() => setLoading(false));
@@ -52,39 +62,41 @@ const NotifyDetail = props => {
 
   return (
     <List className={classes.root}>
-      <ListItem alignItems="flex-start">
-        <ListItemText
-          primary={<>{notify.title}</>}
-          secondary={
-            <div style={{ fontSize: 16 }}>
-              <Typography
-                component="span"
-                variant="h4"
-                className={classes.inline}
-                color="textPrimary"
-              >
-                {notify.active_date}
-              </Typography>
-              <br />
-              <br />
-              {notify.detail &&
-                notify.detail.map(i => (
-                  <>
-                    {i.seq}. {i.content}
-                    <br />
-                    <br />
-                  </>
-                ))}
-              <div style={{ textAlign: "center" }}>
-                💐Thân mến và yêu thương💐 <br />
-                Quản lí lớp học
+      {notify && (
+        <ListItem alignItems="flex-start">
+          <ListItemText
+            primary={<span style={{ fontSize: 32 }}>{notify.title}</span>}
+            secondary={
+              <div>
+                <Typography
+                  component="span"
+                  variant="h5"
+                  className={classes.inline}
+                  color="textPrimary"
+                >
+                  {notify.active_date}
+                </Typography>
                 <br />
-                Cô Hà siêu nhân
+                <br />
+                {detail &&
+                  detail.map(i => (
+                    <>
+                      {i.seq}. {i.content}
+                      <br />
+                      <br />
+                    </>
+                  ))}
+                <div style={{ textAlign: "center" }}>
+                  💐Thân mến và yêu thương💐 <br />
+                  Quản lí lớp học
+                  <br />
+                  Cô Hà siêu nhân
+                </div>
               </div>
-            </div>
-          }
-        />
-      </ListItem>
+            }
+          />
+        </ListItem>
+      )}
     </List>
   );
 };
