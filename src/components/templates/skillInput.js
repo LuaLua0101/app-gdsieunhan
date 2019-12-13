@@ -152,6 +152,8 @@ const SkillInput = props => {
           variant="outlined"
           className={classes.textField}
           {...content}
+          rows="4"
+          multiline
         />
         <Fab
           variant="extended"
@@ -169,7 +171,7 @@ const SkillInput = props => {
           onClick={addTeacher}
         >
           <NavigationIcon className={classes.extendedIcon} />
-          {props.update ? "Sửa thông tin" : "Thêm kỹ năng"}
+          {props.update ? "Sửa kỹ năng" : "Thêm kỹ năng"}
         </Fab>
       </form>
     </>

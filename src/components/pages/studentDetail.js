@@ -56,15 +56,18 @@ export default function StudentDetail() {
         aria-label="disabled tabs example"
       >
         <Tab label="Thông tin" />
+        <Tab label="Khảo sát" />
         <Tab label="Kế hoạch" />
-        {/* <Tab label="Lịch sử theo dõi" /> */}
       </Tabs>
       <SwipeableViews index={value} onChangeIndex={handleChangeIndex}>
         <TabPanel value={value} index={0}>
           <StudentInput update />
         </TabPanel>
         <TabPanel value={value} index={1}>
-          Phần này chưa làm xong
+          Thông tin khảo sát
+        </TabPanel>
+        <TabPanel value={value} index={2}>
+          Kế hoạch đào tạo
         </TabPanel>
       </SwipeableViews>
     </>
