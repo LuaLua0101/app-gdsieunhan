@@ -150,7 +150,7 @@ const TimeKeepingAll = props => {
             <TableCell>Họ tên</TableCell>
             <TableCell>In/Out</TableCell>
             <TableCell>Chấm công</TableCell>
-            <TableCell>Tăng ca</TableCell>
+            <TableCell>Điều chỉnh thời gian</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

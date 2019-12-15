@@ -8,9 +8,7 @@ import Typography from "@material-ui/core/Typography";
 import DynamicImport from "../../utils/lazyImport";
 
 const StudentInput = DynamicImport(() => import("../templates/studentInput"));
-const HistoryOfObservation = DynamicImport(() =>
-  import("../templates/historyOfObservation")
-);
+const Survey = DynamicImport(() => import("../templates/surveyList"));
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -64,7 +62,7 @@ export default function StudentDetail() {
           <StudentInput update />
         </TabPanel>
         <TabPanel value={value} index={1}>
-          Thông tin khảo sát
+          <Survey />
         </TabPanel>
         <TabPanel value={value} index={2}>
           Kế hoạch đào tạo
