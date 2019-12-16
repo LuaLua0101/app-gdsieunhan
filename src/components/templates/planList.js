@@ -79,7 +79,7 @@ const labels = {
   5: "Làm rất tốt"
 };
 
-const SurveyList = props => {
+const PlanList = props => {
   const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
   const [skillGroups, setSkillGroups] = useState();
@@ -93,12 +93,11 @@ const SurveyList = props => {
   useEffect(() => {
     setLoading(true);
     axios
-      .post("skill/list-survey", {
+      .post("plan/list", {
         student_id: parseInt(props.match.params.id)
       })
       .then(res => {
         setSkillGroups(res.data.data);
-        setSurveyId(res.data.survey_id);
         setPlanId(res.data.plan_id);
       })
       .catch()
@@ -266,4 +265,4 @@ const SurveyList = props => {
   );
 };
 
-export default withRouter(SurveyList);
+export default withRouter(PlanList);

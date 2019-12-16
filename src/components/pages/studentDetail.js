@@ -1,5 +1,4 @@
 import React from "react";
-import Paper from "@material-ui/core/Paper";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import SwipeableViews from "react-swipeable-views";
@@ -9,6 +8,7 @@ import DynamicImport from "../../utils/lazyImport";
 
 const StudentInput = DynamicImport(() => import("../templates/studentInput"));
 const Survey = DynamicImport(() => import("../templates/surveyList"));
+const Plan = DynamicImport(() => import("../templates/planList"));
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -54,8 +54,8 @@ export default function StudentDetail() {
         aria-label="disabled tabs example"
       >
         <Tab label="Thông tin" />
-        <Tab label="Lấy ý kiến" />
-        <Tab label="Kế hoạch" />
+        <Tab label="Bản khảo sát" />
+        <Tab label="Bản kế hoạch" />
       </Tabs>
       <SwipeableViews index={value} onChangeIndex={handleChangeIndex}>
         <TabPanel value={value} index={0}>
@@ -65,7 +65,7 @@ export default function StudentDetail() {
           <Survey />
         </TabPanel>
         <TabPanel value={value} index={2}>
-          Kế hoạch đào tạo
+          <Plan />
         </TabPanel>
       </SwipeableViews>
     </>

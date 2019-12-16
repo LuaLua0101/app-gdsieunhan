@@ -5,9 +5,6 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import axios from "../../utils/axios";
-import Box from "@material-ui/core/Box";
-import Rating from "@material-ui/lab/Rating";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -17,21 +14,11 @@ const useStyles = makeStyles(theme => ({
 
 export default function SurveySkillList(props) {
   const classes = useStyles();
-  const [loading, setLoading] = useState(false);
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    setLoading(true);
-    axios
-      .post("skill/list-survey", {
-        group: props.group
-      })
-      .then(res => {
-        setData(res.data.data);
-      })
-      .catch()
-      .finally(() => setLoading(false));
-  }, []);
+    setData(props.skills);
+  }, [props.skills]);
 
   return (
     <Table className={classes.table} aria-label="simple table">
@@ -54,19 +41,13 @@ export default function SurveySkillList(props) {
         {data &&
           data.map((item, index) => (
             <TableRow
+              key={index}
               style={{ cursor: "pointer" }}
-              onClick={() => props.open(item, index + 1)}
+              onClick={() => props.open(props.group, item, index + 1)}
             >
               <TableCell>{index + 1}</TableCell>
               <TableCell>{item.content}</TableCell>
-              <TableCell>
-                {item.rate ? item.rate : 0}
-                {/* <Rating
-                  name="size-small"
-                  value={item.rate ? item.rate : 0}
-                  size="small"
-                /> */}
-              </TableCell>
+              <TableCell>{item.rate ? item.rate : 0}</TableCell>
             </TableRow>
           ))}
       </TableBody>
