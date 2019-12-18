@@ -110,8 +110,7 @@ const PlanList = props => {
 
   const updateSurvey = () => {
     axios
-      .post("skill/update-survey", {
-        survey_id: surveyId,
+      .post("plan/update", {
         plan_id: planId,
         skill_id: selectedSkill.skill.id,
         rate: selectedSkill.skill.rate,
