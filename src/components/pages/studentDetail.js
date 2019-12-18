@@ -9,6 +9,9 @@ import DynamicImport from "../../utils/lazyImport";
 const StudentInput = DynamicImport(() => import("../templates/studentInput"));
 const Survey = DynamicImport(() => import("../templates/surveyList"));
 const Plan = DynamicImport(() => import("../templates/planList"));
+const TimeKeepingDetail = DynamicImport(() =>
+  import("../templates/timeKeepingStudentDetail")
+);
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -56,6 +59,7 @@ export default function StudentDetail() {
         <Tab label="Thông tin" />
         <Tab label="Bản khảo sát" />
         <Tab label="Bản kế hoạch" />
+        <Tab label="Điểm danh" />
       </Tabs>
       <SwipeableViews index={value} onChangeIndex={handleChangeIndex}>
         <TabPanel value={value} index={0}>
@@ -66,6 +70,9 @@ export default function StudentDetail() {
         </TabPanel>
         <TabPanel value={value} index={2}>
           <Plan />
+        </TabPanel>
+        <TabPanel value={value} index={3}>
+          <TimeKeepingDetail />
         </TabPanel>
       </SwipeableViews>
     </>

@@ -27,7 +27,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const TimeKeepingDetail = props => {
+const TimeKeepingStudentDetail = props => {
   const [open, setOpen] = useState(false);
   const [tID, setTID] = useState(null);
   const [data, setData] = useState(null);
@@ -38,7 +38,7 @@ const TimeKeepingDetail = props => {
   useEffect(() => {
     setLoading(true);
     axios
-      .post("teacher/time-keeping", {
+      .post("student/time-keeping", {
         id: parseInt(props.match.params.id)
       })
       .then(res => {
@@ -68,7 +68,7 @@ const TimeKeepingDetail = props => {
 
   const addCheckin = (id, date) => {
     axios
-      .post("teacher/add-checkin", {
+      .post("student/add-checkin", {
         id,
         date
       })
@@ -82,7 +82,7 @@ const TimeKeepingDetail = props => {
             ...res.data.checkin
           }
         });
-        enqueueSnackbar("Xác nhận đã chấm công", { variant: "success" });
+        enqueueSnackbar("Xác nhận đã điểm danh", { variant: "success" });
       })
       .catch(err =>
         enqueueSnackbar(err.message, {
@@ -94,7 +94,7 @@ const TimeKeepingDetail = props => {
 
   const removeCheckin = (id, tid) => {
     axios
-      .post("teacher/remove-checkin", {
+      .post("student/remove-checkin", {
         id: tid
       })
       .then(res => {
@@ -116,7 +116,7 @@ const TimeKeepingDetail = props => {
 
   const handleOk = () => {
     axios
-      .post("teacher/update-checkin", {
+      .post("student/update-checkin", {
         id: tID.id,
         checkin: tID.checkin,
         checkout: tID.checkout
@@ -154,7 +154,7 @@ const TimeKeepingDetail = props => {
           <TableRow>
             <TableCell>Ngày</TableCell>
             <TableCell>In/Out</TableCell>
-            {/* <TableCell>Chấm công</TableCell>
+            {/* <TableCell>Điểm danh</TableCell>
             <TableCell>Điều chỉnh thời gian</TableCell> */}
           </TableRow>
         </TableHead>
@@ -180,7 +180,7 @@ const TimeKeepingDetail = props => {
                     />
                   ) : (
                     <Chip
-                      label="chưa chấm công"
+                      label="chưa điểm danh"
                       size="small"
                       color="secondary"
                     />
@@ -237,7 +237,7 @@ const TimeKeepingDetail = props => {
           aria-describedby="alert-dialog-slide-description"
         >
           <DialogTitle id="alert-dialog-slide-title">
-            Thay đổi giờ checkin/checkout
+            Thay đổi giờ vào/ra
           </DialogTitle>
           <DialogContent>
             <Grid container spacing={3}>
@@ -347,4 +347,4 @@ const TimeKeepingDetail = props => {
   );
 };
 
-export default withRouter(TimeKeepingDetail);
+export default withRouter(TimeKeepingStudentDetail);

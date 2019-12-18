@@ -14,7 +14,6 @@ import Slide from "@material-ui/core/Slide";
 import { withRouter } from "react-router";
 import axios from "../../utils/axios";
 import { dispatch, useGlobalState } from "../../Store";
-import moment from "moment";
 import { useSnackbar } from "notistack";
 import EventAvailableIcon from "@material-ui/icons/EventAvailable";
 import EventBusyIcon from "@material-ui/icons/EventBusy";
@@ -27,10 +26,9 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const TimeKeepingDetail = props => {
+const TimeKeepingStudentAll = props => {
   const [open, setOpen] = useState(false);
   const [tID, setTID] = useState(null);
-  const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [timekeeping] = useGlobalState("timekeeping");
   const { enqueueSnackbar } = useSnackbar();
@@ -38,12 +36,9 @@ const TimeKeepingDetail = props => {
   useEffect(() => {
     setLoading(true);
     axios
-      .post("teacher/time-keeping", {
-        id: parseInt(props.match.params.id)
-      })
+      .post("student/time-keeping-all")
       .then(res => {
         console.log(res.data);
-        setData(res.data);
         dispatch({
           type: "init_timekeeping",
           timekeeping: res.data.list
@@ -66,11 +61,10 @@ const TimeKeepingDetail = props => {
     setOpen(false);
   };
 
-  const addCheckin = (id, date) => {
+  const addCheckin = id => {
     axios
-      .post("teacher/add-checkin", {
-        id,
-        date
+      .post("student/add-checkin", {
+        id
       })
       .then(res => {
         console.log(res.data.checkin);
@@ -82,7 +76,7 @@ const TimeKeepingDetail = props => {
             ...res.data.checkin
           }
         });
-        enqueueSnackbar("Xác nhận đã chấm công", { variant: "success" });
+        enqueueSnackbar("Xác nhận đã điểm danh", { variant: "success" });
       })
       .catch(err =>
         enqueueSnackbar(err.message, {
@@ -94,7 +88,7 @@ const TimeKeepingDetail = props => {
 
   const removeCheckin = (id, tid) => {
     axios
-      .post("teacher/remove-checkin", {
+      .post("student/remove-checkin", {
         id: tid
       })
       .then(res => {
@@ -116,7 +110,7 @@ const TimeKeepingDetail = props => {
 
   const handleOk = () => {
     axios
-      .post("teacher/update-checkin", {
+      .post("student/update-checkin", {
         id: tID.id,
         checkin: tID.checkin,
         checkout: tID.checkout
@@ -152,79 +146,72 @@ const TimeKeepingDetail = props => {
           }}
         >
           <TableRow>
-            <TableCell>Ngày</TableCell>
+            <TableCell>Họ tên trẻ</TableCell>
             <TableCell>In/Out</TableCell>
-            {/* <TableCell>Chấm công</TableCell>
-            <TableCell>Điều chỉnh thời gian</TableCell> */}
+            <TableCell>Điểm danh</TableCell>
+            <TableCell>Điều chỉnh thời gian</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {data &&
-            data.list &&
-            data.list.map((row, index) => (
-              <TableRow key={index}>
-                <TableCell>
-                  {row && (
-                    <Chip
-                      label={moment(row.date).format("DD/MM")}
-                      variant="outlined"
-                    />
-                  )}
-                </TableCell>
-                <TableCell>
-                  {row && row.checkin ? (
-                    <Chip
-                      label={row.checkin + " - " + row.checkout}
-                      size="small"
-                      color="primary"
-                    />
-                  ) : (
-                    <Chip
-                      label="chưa chấm công"
-                      size="small"
-                      color="secondary"
-                    />
-                  )}
-                </TableCell>
-                {/* <TableCell>
-                  {row && row.checkin ? (
-                    <EventBusyIcon
-                      style={{
-                        color: "red",
-                        cursor: "pointer",
-                        fontSize: 30
-                      }}
-                      onClick={() =>
-                        removeCheckin(props.match.params.id, row.id)
-                      }
-                    />
-                  ) : (
-                    <EventAvailableIcon
-                      style={{
-                        color: "#3fb488",
-                        cursor: "pointer",
-                        fontSize: 30
-                      }}
-                      onClick={() =>
-                        addCheckin(props.match.params.id, row.date)
-                      }
-                    />
-                  )}
-                </TableCell>
-                <TableCell>
-                  {row && row.checkin && (
-                    <PlaylistAddIcon
-                      style={{
-                        color: "#285083",
-                        cursor: "pointer",
-                        fontSize: 30
-                      }}
-                      onClick={() => edit(row.id, row.checkin, row.checkout)}
-                    />
-                  )}
-                </TableCell> */}
-              </TableRow>
-            ))}
+          {timekeeping.map(row => (
+            <TableRow key={row.id}>
+              <TableCell
+                onClick={() => props.history.push("/student/" + row.id)}
+              >
+                {row.name}
+              </TableCell>
+              <TableCell>
+                {row.checkin ? (
+                  <Chip
+                    label={row.checkin.checkin + " - " + row.checkin.checkout}
+                    size="small"
+                    color="primary"
+                  />
+                ) : (
+                  <Chip label="chưa điểm danh" size="small" color="secondary" />
+                )}
+              </TableCell>
+              <TableCell>
+                {row.checkin ? (
+                  <EventBusyIcon
+                    style={{
+                      color: "red",
+                      cursor: "pointer",
+                      fontSize: 30
+                    }}
+                    onClick={() => removeCheckin(row.id, row.checkin.tid)}
+                  />
+                ) : (
+                  <EventAvailableIcon
+                    style={{
+                      color: "#3fb488",
+                      cursor: "pointer",
+                      fontSize: 30
+                    }}
+                    onClick={() => addCheckin(row.id)}
+                  />
+                )}
+              </TableCell>
+              <TableCell>
+                {row.checkin && (
+                  <PlaylistAddIcon
+                    style={{
+                      color: "#285083",
+                      cursor: "pointer",
+                      fontSize: 30
+                    }}
+                    onClick={() =>
+                      edit(
+                        row.checkin.tid,
+                        row.checkin.checkin,
+                        row.checkin.checkout
+                      )
+                    }
+                  />
+                )}
+              </TableCell>
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
       {tID && (
@@ -243,7 +230,7 @@ const TimeKeepingDetail = props => {
             <Grid container spacing={3}>
               <Grid item xs={6} sm={6}>
                 <TextField
-                  label="Thời gian checkin"
+                  label="Thời gian điểm danh"
                   margin="normal"
                   type="number"
                   variant="outlined"
@@ -288,7 +275,7 @@ const TimeKeepingDetail = props => {
               </Grid>
               <Grid item xs={6} sm={6}>
                 <TextField
-                  label="Thời gian checkout"
+                  label="Thời gian về"
                   margin="normal"
                   type="number"
                   variant="outlined"
@@ -347,4 +334,4 @@ const TimeKeepingDetail = props => {
   );
 };
 
-export default withRouter(TimeKeepingDetail);
+export default withRouter(TimeKeepingStudentAll);

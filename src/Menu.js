@@ -158,7 +158,7 @@ const Menu = props => {
                 }}
               />
             </ListItem>
-            <ListItem button className={classes.nested}>
+            {/* <ListItem button className={classes.nested}>
               <ListItemIcon>
                 <StarBorder />
               </ListItemIcon>
@@ -169,7 +169,7 @@ const Menu = props => {
                   props.history.push("/scheduled");
                 }}
               />
-            </ListItem>
+            </ListItem> */}
             <ListItem button className={classes.nested}>
               <ListItemIcon>
                 <ShowChartIcon />
@@ -242,18 +242,6 @@ const Menu = props => {
         </ListItem>
         <Collapse in={menu.student} timeout="auto">
           <List component="div" disablePadding>
-            {/* <ListItem button className={classes.nested}>
-              <ListItemIcon>
-                <PlaylistAddCheckIcon />
-              </ListItemIcon>
-              <ListItemText
-                primary="Sổ theo dõi trẻ"
-                onClick={() => {
-                  props.close();
-                  props.history.push("/add-report");
-                }}
-              />
-            </ListItem> */}
             <ListItem button className={classes.nested}>
               <ListItemIcon>
                 <GroupIcon />
@@ -263,6 +251,18 @@ const Menu = props => {
                 onClick={() => {
                   props.close();
                   props.history.push("/students");
+                }}
+              />
+            </ListItem>
+            <ListItem button className={classes.nested}>
+              <ListItemIcon>
+                <FaceIcon />
+              </ListItemIcon>
+              <ListItemText
+                primary="Điểm danh trẻ"
+                onClick={() => {
+                  props.close();
+                  props.history.push("/time-keeping-student");
                 }}
               />
             </ListItem>
