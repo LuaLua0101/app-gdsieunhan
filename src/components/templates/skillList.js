@@ -94,7 +94,7 @@ const SkillList = props => {
           }}
         >
           <TableRow>
-            <TableCell>Nhóm kỹ năng</TableCell>
+            <TableCell>Mặt phát triển</TableCell>
             <TableCell>Câu hỏi kỹ năng</TableCell>
             <TableCell>Xóa</TableCell>
           </TableRow>

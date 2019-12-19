@@ -54,7 +54,7 @@ export default function SkillGroupsDetailPage(props) {
         onChange={handleChange}
         aria-label="disabled tabs example"
       >
-        <Tab label="Chỉnh sửa nhóm kỹ năng" />
+        <Tab label="Chỉnh sửa mặt phát triển" />
       </Tabs>
       <SwipeableViews index={value} onChangeIndex={handleChangeIndex}>
         <TabPanel value={value} index={0}>

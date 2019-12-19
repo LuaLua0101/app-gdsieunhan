@@ -17,6 +17,18 @@ import Rating from "@material-ui/lab/Rating";
 import Box from "@material-ui/core/Box";
 import { withRouter } from "react-router";
 
+import SortByAlphaIcon from '@material-ui/icons/SortByAlpha';
+import DirectionsRunIcon from '@material-ui/icons/DirectionsRun';
+import FaceIcon from '@material-ui/icons/Face';
+import EmojiPeopleIcon from '@material-ui/icons/EmojiPeople';
+import FontDownloadIcon from '@material-ui/icons/FontDownload';
+import HeadsetMicIcon from '@material-ui/icons/HeadsetMic';
+import HearingIcon from '@material-ui/icons/Hearing';
+import FilterVintageIcon from '@material-ui/icons/FilterVintage';
+import LeakAddIcon from '@material-ui/icons/LeakAdd';
+import LocalFloristIcon from '@material-ui/icons/LocalFlorist';
+import PoolIcon from '@material-ui/icons/Pool';
+
 const SurveySkillList = DynamicImport(() =>
   import("../organisms/surveySkillList")
 );
@@ -78,6 +90,37 @@ const labels = {
   4: "Làm khá tốt",
   5: "Làm rất tốt"
 };
+
+const colors = [
+  '#3cb44b',
+  '#e6194b',
+  '#ffe119',
+  '#bcf60c',
+  '#46f0f0',
+  '#aaffc3',
+  '#fabebe',
+  '#ffd8b1',
+  '#fffac8',
+  '#e6beff',
+  '#911eb4'
+]
+
+const icons = (group) => {
+  switch (group) {
+    case 'Ngôn ngữ': return <SortByAlphaIcon fontSize="inherit" />
+    case 'Cảm giác & vận động': return <DirectionsRunIcon fontSize="inherit" />
+    case 'Chơi & quan tâm vật liệu chơi': return <FaceIcon fontSize="inherit" />
+    case 'Quan hệ & ảnh hưởng': return <EmojiPeopleIcon fontSize="inherit" />
+    case 'Nhận thức ngôn ngữ': return <FontDownloadIcon fontSize="inherit" />
+    case 'Nhận thức thể hiện': return <HeadsetMicIcon fontSize="inherit" />
+    case 'Phối hợp tay mắt': return <HearingIcon fontSize="inherit" />
+    case 'Vận động tinh': return <FilterVintageIcon fontSize="inherit" />
+    case 'Bắt chước': return <LeakAddIcon fontSize="inherit" />
+    case 'Tri giác': return <LocalFloristIcon fontSize="inherit" />
+    case 'Vận động thô': return <PoolIcon fontSize="inherit" />
+    default: return <SortByAlphaIcon fontSize="inherit" />
+  }
+}
 
 const SurveyList = props => {
   const { enqueueSnackbar } = useSnackbar();
@@ -143,7 +186,7 @@ const SurveyList = props => {
     <>
       {skillGroups &&
         skillGroups.map((item, index) => (
-          <ExpansionPanel key={index}>
+          <ExpansionPanel key={index} style={{ backgroundColor: colors[index] }}>
             <ExpansionPanelSummary
               expandIcon={<ExpandMoreIcon />}
               aria-controls="panel1a-content"
@@ -188,6 +231,7 @@ const SurveyList = props => {
               <Typography component="legend">Đánh giá theo điểm</Typography>
               <div className={classes.rating1}>
                 <Rating
+                  precision={0.5}
                   value={selectedSkill.skill.rate}
                   onChange={(event, value) => {
                     setSelectedSkill({
@@ -198,6 +242,7 @@ const SurveyList = props => {
                       }
                     });
                   }}
+                  icon={icons(selectedSkill.group)}
                 />
                 <Box ml={2}>
                   {labels[hover !== -1 ? hover : selectedSkill.skill.rate]}
@@ -240,10 +285,10 @@ const SurveyList = props => {
                   const res = element.skills.map(obj =>
                     obj && obj.id === selectedSkill.skill.id
                       ? {
-                          ...obj,
-                          content: selectedSkill.skill.content,
-                          rate: selectedSkill.skill.rate
-                        }
+                        ...obj,
+                        content: selectedSkill.skill.content,
+                        rate: selectedSkill.skill.rate
+                      }
                       : obj
                   );
                   skillGroups[index] = {

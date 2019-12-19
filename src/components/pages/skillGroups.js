@@ -68,13 +68,13 @@ const SkillGroupsPage = props => {
             borderRadius: 0
           }}
         >
-          <Typography className={classes.heading}>Thêm nhóm kỹ năng</Typography>
+          <Typography className={classes.heading}>Thêm mặt phát triển</Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
           <SkillGroupInput />
         </ExpansionPanelDetails>
       </ExpansionPanel>
-      <TypoGreenH5 text="Danh sách nhóm kỹ năng" />
+      <TypoGreenH5 text="Danh sách mặt phát triển" />
       <SkillGroupList />
     </>
   );

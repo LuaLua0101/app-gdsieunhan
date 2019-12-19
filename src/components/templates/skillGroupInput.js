@@ -129,7 +129,7 @@ const SkillGroupInput = props => {
           />
         </RadioGroup>
         <TextField
-          label="Nhóm kỹ năng"
+          label="Mặt phát triển"
           margin="normal"
           variant="outlined"
           className={classes.textField}
@@ -151,7 +151,7 @@ const SkillGroupInput = props => {
           onClick={addTeacher}
         >
           <NavigationIcon className={classes.extendedIcon} />
-          {props.update ? "Sửa thông tin" : "Thêm nhóm kỹ năng"}
+          {props.update ? "Sửa thông tin" : "Thêm mặt phát triển"}
         </Fab>
       </form>
     </>
