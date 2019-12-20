@@ -130,7 +130,7 @@ const SkillInput = props => {
       <form className={classes.container} noValidate autoComplete="off">
         <FormControl variant="outlined" className={classes.formControl}>
           <InputLabel ref={inputLabel} id="demo-simple-select-outlined-label">
-            Chọn nhóm kỹ năng
+            Chọn mặt phát triển
           </InputLabel>
           <Select
             labelId="demo-simple-select-outlined-label"

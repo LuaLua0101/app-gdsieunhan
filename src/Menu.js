@@ -346,7 +346,7 @@ const Menu = props => {
               <ListItemIcon>
                 <PersonIcon />
               </ListItemIcon>
-              <ListItemText primary="Nhóm kỹ năng" />
+              <ListItemText primary="Các mặt phát triển" />
               {menu.skill_group ? <ExpandLess /> : <ExpandMore />}
             </ListItem>
             <Collapse in={menu.skill_group} timeout="auto">
@@ -356,7 +356,7 @@ const Menu = props => {
                     <GroupIcon />
                   </ListItemIcon>
                   <ListItemText
-                    primary="Danh sách nhóm kỹ năng"
+                    primary="Danh sách mặt phát triển"
                     onClick={() => {
                       props.close();
                       props.history.push("/skill-groups");

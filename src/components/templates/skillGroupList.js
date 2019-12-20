@@ -100,7 +100,7 @@ const SkillGroupList = props => {
         >
           <TableRow>
             <TableCell>Phân loại</TableCell>
-            <TableCell>Nhóm kỹ năng</TableCell>
+            <TableCell>Mặt phát triển</TableCell>
             <TableCell>Xóa</TableCell>
           </TableRow>
         </TableHead>
