@@ -16,6 +16,7 @@ import NavigationIcon from "@material-ui/icons/Done";
 import Rating from "@material-ui/lab/Rating";
 import Box from "@material-ui/core/Box";
 import { withRouter } from "react-router";
+import FavoriteIcon from "@material-ui/icons/Favorite";
 
 const SurveySkillList = DynamicImport(() =>
   import("../organisms/surveySkillList")
@@ -188,6 +189,8 @@ const SurveyList = props => {
               <Typography component="legend">Đánh giá theo điểm</Typography>
               <div className={classes.rating1}>
                 <Rating
+                  precision={0.5}
+                  icon={<FavoriteIcon fontSize="inherit" />}
                   value={selectedSkill.skill.rate}
                   onChange={(event, value) => {
                     setSelectedSkill({
