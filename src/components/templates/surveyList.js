@@ -213,7 +213,7 @@ const SurveyList = props => {
             >
               <Typography className={classes.heading}>{item.name}</Typography>
               <Typography className={classes.secondaryHeading}>
-                Số lượng mục tiêu: {item.skills.length}
+                SL câu hỏi: {item.skills.length}
               </Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>

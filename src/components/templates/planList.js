@@ -210,7 +210,7 @@ const PlanList = props => {
             >
               <Typography className={classes.heading}>{item.name}</Typography>
               <Typography className={classes.secondaryHeading}>
-                Số lượng mục tiêu: {item.skills.length}
+                SL mục tiêu: {item.skills.length}
               </Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>
