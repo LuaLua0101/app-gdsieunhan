@@ -138,6 +138,23 @@ const TimeKeepingDetail = props => {
       .finally(() => setOpen(false));
   };
 
+  const renderStatus = (checkin, checkout) => {
+    const hIn = checkin.split(":")[0];
+    const hOut = checkout.split(":")[0];
+    let res = [];
+    if (parseInt(hIn) < 8) {
+      res.push("Đi sớm");
+    } else if (parseInt(hIn) > 8) {
+      res.push("Đi muộn " + (parseInt(hIn) - 8) + " giờ");
+    }
+    if (parseInt(hOut) < 17) {
+      res.push("Về sớm " + (17 - parseInt(hOut)) + " giờ");
+    } else if (parseInt(hOut) > 17) {
+      res.push("Tăng ca " + (parseInt(hOut) - 17) + " giờ");
+    }
+    return res.map(i => <Chip label={i} size="small" color="secondary" />);
+  };
+
   return (
     <>
       <Table>
@@ -154,6 +171,7 @@ const TimeKeepingDetail = props => {
           <TableRow>
             <TableCell>Ngày</TableCell>
             <TableCell>In/Out</TableCell>
+            <TableCell></TableCell>
             {/* <TableCell>Chấm công</TableCell>
             <TableCell>Điều chỉnh thời gian</TableCell> */}
           </TableRow>
@@ -185,6 +203,11 @@ const TimeKeepingDetail = props => {
                       color="secondary"
                     />
                   )}
+                </TableCell>
+                <TableCell>
+                  {row &&
+                    row.checkin &&
+                    renderStatus(row.checkin, row.checkout)}
                 </TableCell>
                 {/* <TableCell>
                   {row && row.checkin ? (

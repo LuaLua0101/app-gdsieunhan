@@ -93,17 +93,17 @@ const labels = {
 };
 
 const colors = [
-  "#3cb44b",
-  "#e6194b",
-  "#ffe119",
-  "#bcf60c",
-  "#46f0f0",
-  "#aaffc3",
-  "#fabebe",
-  "#ffd8b1",
-  "#fffac8",
-  "#e6beff",
-  "#911eb4"
+  "#ad9404",
+  "#c5a804",
+  "#f2cf1b",
+  "#ffe01c",
+  "#fff004",
+  "#fff454",
+  "#fff763",
+  "#f4822a",
+  "#faaa53",
+  "#fdd399",
+  "#ffe8be"
 ];
 
 const icons = group => {
@@ -153,7 +153,10 @@ const SurveyList = props => {
         student_id: parseInt(props.match.params.id)
       })
       .then(res => {
-        setSkillGroups(res.data.data);
+        const data = res.data.data.sort((a, b) => {
+          return parseInt(a.sequent) - parseInt(b.sequent);
+        });
+        setSkillGroups(data);
         setSurveyId(res.data.survey_id);
         setPlanId(res.data.plan_id);
       })
@@ -210,7 +213,7 @@ const SurveyList = props => {
             >
               <Typography className={classes.heading}>{item.name}</Typography>
               <Typography className={classes.secondaryHeading}>
-                Số lượng câu hỏi: {item.skills.length}
+                Số lượng mục tiêu: {item.skills.length}
               </Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>

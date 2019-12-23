@@ -17,17 +17,17 @@ import Rating from "@material-ui/lab/Rating";
 import Box from "@material-ui/core/Box";
 import { withRouter } from "react-router";
 
-import SortByAlphaIcon from '@material-ui/icons/SortByAlpha';
-import DirectionsRunIcon from '@material-ui/icons/DirectionsRun';
-import FaceIcon from '@material-ui/icons/Face';
-import EmojiPeopleIcon from '@material-ui/icons/EmojiPeople';
-import FontDownloadIcon from '@material-ui/icons/FontDownload';
-import HeadsetMicIcon from '@material-ui/icons/HeadsetMic';
-import HearingIcon from '@material-ui/icons/Hearing';
-import FilterVintageIcon from '@material-ui/icons/FilterVintage';
-import LeakAddIcon from '@material-ui/icons/LeakAdd';
-import LocalFloristIcon from '@material-ui/icons/LocalFlorist';
-import PoolIcon from '@material-ui/icons/Pool';
+import SortByAlphaIcon from "@material-ui/icons/SortByAlpha";
+import DirectionsRunIcon from "@material-ui/icons/DirectionsRun";
+import FaceIcon from "@material-ui/icons/Face";
+import EmojiPeopleIcon from "@material-ui/icons/EmojiPeople";
+import FontDownloadIcon from "@material-ui/icons/FontDownload";
+import HeadsetMicIcon from "@material-ui/icons/HeadsetMic";
+import HearingIcon from "@material-ui/icons/Hearing";
+import FilterVintageIcon from "@material-ui/icons/FilterVintage";
+import LeakAddIcon from "@material-ui/icons/LeakAdd";
+import LocalFloristIcon from "@material-ui/icons/LocalFlorist";
+import PoolIcon from "@material-ui/icons/Pool";
 
 const SurveySkillList = DynamicImport(() =>
   import("../organisms/surveySkillList")
@@ -92,36 +92,47 @@ const labels = {
 };
 
 const colors = [
-  '#3cb44b',
-  '#e6194b',
-  '#ffe119',
-  '#bcf60c',
-  '#46f0f0',
-  '#aaffc3',
-  '#fabebe',
-  '#ffd8b1',
-  '#fffac8',
-  '#e6beff',
-  '#911eb4'
-]
+  "#006c6f",
+  "#007f85",
+  "#007f85",
+  "#00a2b1",
+  "#74cdd5",
+  "#9bd6de",
+  "#d0eaeb",
+  "#ee1161",
+  "#f1639f",
+  "#f387b8",
+  "#f8b9d8"
+];
 
-
-const icons = (group) => {
+const icons = group => {
   switch (group) {
-    case 'Ngôn ngữ': return <SortByAlphaIcon fontSize="inherit" />
-    case 'Cảm giác & vận động': return <DirectionsRunIcon fontSize="inherit" />
-    case 'Chơi & quan tâm vật liệu chơi': return <FaceIcon fontSize="inherit" />
-    case 'Quan hệ & ảnh hưởng': return <EmojiPeopleIcon fontSize="inherit" />
-    case 'Nhận thức ngôn ngữ': return <FontDownloadIcon fontSize="inherit" />
-    case 'Nhận thức thể hiện': return <HeadsetMicIcon fontSize="inherit" />
-    case 'Phối hợp tay mắt': return <HearingIcon fontSize="inherit" />
-    case 'Vận động tinh': return <FilterVintageIcon fontSize="inherit" />
-    case 'Bắt chước': return <LeakAddIcon fontSize="inherit" />
-    case 'Tri giác': return <LocalFloristIcon fontSize="inherit" />
-    case 'Vận động thô': return <PoolIcon fontSize="inherit" />
-    default: return <SortByAlphaIcon fontSize="inherit" />
+    case "Ngôn ngữ":
+      return <SortByAlphaIcon fontSize="inherit" />;
+    case "Cảm giác & vận động":
+      return <DirectionsRunIcon fontSize="inherit" />;
+    case "Chơi & quan tâm vật liệu chơi":
+      return <FaceIcon fontSize="inherit" />;
+    case "Quan hệ & ảnh hưởng":
+      return <EmojiPeopleIcon fontSize="inherit" />;
+    case "Nhận thức ngôn ngữ":
+      return <FontDownloadIcon fontSize="inherit" />;
+    case "Nhận thức thể hiện":
+      return <HeadsetMicIcon fontSize="inherit" />;
+    case "Phối hợp tay mắt":
+      return <HearingIcon fontSize="inherit" />;
+    case "Vận động tinh":
+      return <FilterVintageIcon fontSize="inherit" />;
+    case "Bắt chước":
+      return <LeakAddIcon fontSize="inherit" />;
+    case "Tri giác":
+      return <LocalFloristIcon fontSize="inherit" />;
+    case "Vận động thô":
+      return <PoolIcon fontSize="inherit" />;
+    default:
+      return <SortByAlphaIcon fontSize="inherit" />;
   }
-}
+};
 
 const PlanList = props => {
   const { enqueueSnackbar } = useSnackbar();
@@ -141,7 +152,10 @@ const PlanList = props => {
         student_id: parseInt(props.match.params.id)
       })
       .then(res => {
-        setSkillGroups(res.data.data);
+        const data = res.data.data.sort((a, b) => {
+          return parseInt(a.sequent) - parseInt(b.sequent);
+        });
+        setSkillGroups(data);
         setPlanId(res.data.plan_id);
       })
       .catch()
@@ -185,7 +199,10 @@ const PlanList = props => {
     <>
       {skillGroups &&
         skillGroups.map((item, index) => (
-          <ExpansionPanel key={index} style={{backgroundColor : colors[index]}}>
+          <ExpansionPanel
+            key={index}
+            style={{ backgroundColor: colors[index] }}
+          >
             <ExpansionPanelSummary
               expandIcon={<ExpandMoreIcon />}
               aria-controls="panel1a-content"
@@ -193,7 +210,7 @@ const PlanList = props => {
             >
               <Typography className={classes.heading}>{item.name}</Typography>
               <Typography className={classes.secondaryHeading}>
-                Số lượng câu hỏi: {item.skills.length}
+                Số lượng mục tiêu: {item.skills.length}
               </Typography>
             </ExpansionPanelSummary>
             <ExpansionPanelDetails>

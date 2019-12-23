@@ -58,8 +58,10 @@ const StudentInput = props => {
   const fee = useFormInput();
   const alias = useFormInput();
   const mName = useFormInput();
+  const tName = useFormInput();
   const fName = useFormInput();
   const mPhone = useFormInput();
+  const tPhone = useFormInput();
   const fPhone = useFormInput();
   const mFB = useFormInput();
   const fFB = useFormInput();
@@ -78,7 +80,7 @@ const StudentInput = props => {
         .post("student/detail", { id: parseInt(props.match.params.id) })
         .then(res => {
           console.log(res.data);
-          const { student, mom, dad } = res.data;
+          const { student, mom, dad, tutor } = res.data;
           setGender(student.gender);
           setID(student.id);
           subId.setValue(student.sub_id);
@@ -95,6 +97,10 @@ const StudentInput = props => {
             fPhone.setValue(dad.phone);
             fName.setValue(dad.name);
             fFB.setValue(dad.facebook);
+          }
+          if (tutor) {
+            tPhone.setValue(tutor.phone);
+            tName.setValue(tutor.name);
           }
           note.setValue(student.note);
           name.setValue(student.name);
@@ -121,8 +127,10 @@ const StudentInput = props => {
     fee.setValue("");
     alias.setValue("");
     mName.setValue("");
+    tName.setValue("");
     fName.setValue("");
     mPhone.setValue("");
+    tPhone.setValue("");
     fPhone.setValue("");
     mFB.setValue("");
     fFB.setValue("");
@@ -146,6 +154,8 @@ const StudentInput = props => {
         dob: moment(selectedDate).format("YYYY/MM/DD"),
         mName: mName.value,
         mPhone: mPhone.value,
+        tName: tName.value,
+        tPhone: tPhone.value,
         mFB: mFB.value,
         fName: fName.value,
         fPhone: fPhone.value,
@@ -273,6 +283,26 @@ const StudentInput = props => {
           variant="outlined"
           className={classes.textField}
           {...fFB}
+        />
+        <TextField
+          label="Họ tên người đón hộ"
+          margin="normal"
+          variant="outlined"
+          className={classes.textField}
+          {...tName}
+        />
+        <TextField
+          label="Số điện thoại ng đón hộ"
+          margin="normal"
+          type="number"
+          variant="outlined"
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">(+84) </InputAdornment>
+            )
+          }}
+          className={classes.textField}
+          {...tPhone}
         />
         <TextField
           label="Địa chỉ liên hệ"

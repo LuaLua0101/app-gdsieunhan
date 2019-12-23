@@ -16,9 +16,6 @@ import axios from "../../utils/axios";
 import { dispatch, useGlobalState } from "../../Store";
 import moment from "moment";
 import { useSnackbar } from "notistack";
-import EventAvailableIcon from "@material-ui/icons/EventAvailable";
-import EventBusyIcon from "@material-ui/icons/EventBusy";
-import PlaylistAddIcon from "@material-ui/icons/PlaylistAdd";
 import Grid from "@material-ui/core/Grid";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import TextField from "@material-ui/core/TextField";
@@ -138,6 +135,15 @@ const TimeKeepingStudentDetail = props => {
       .finally(() => setOpen(false));
   };
 
+  const renderStatus = (checkin, checkout) => {
+    const hIn = checkin.split(":")[0];
+    if (parseInt(hIn) < 8) {
+      return <Chip label="Đi sớm" size="small" color="secondary" />;
+    } else if (parseInt(hIn) > 8) {
+      return <Chip label="Đi muộn" size="small" color="primary" />;
+    }
+  };
+
   return (
     <>
       <Table>
@@ -154,6 +160,7 @@ const TimeKeepingStudentDetail = props => {
           <TableRow>
             <TableCell>Ngày</TableCell>
             <TableCell>In/Out</TableCell>
+            <TableCell></TableCell>
             {/* <TableCell>Điểm danh</TableCell>
             <TableCell>Điều chỉnh thời gian</TableCell> */}
           </TableRow>
@@ -185,6 +192,11 @@ const TimeKeepingStudentDetail = props => {
                       color="secondary"
                     />
                   )}
+                </TableCell>
+                <TableCell>
+                  {row &&
+                    row.checkin &&
+                    renderStatus(row.checkin, row.checkout)}
                 </TableCell>
                 {/* <TableCell>
                   {row && row.checkin ? (

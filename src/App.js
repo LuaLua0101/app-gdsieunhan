@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { GlobalStateProvider } from "./Store";
 import "./utils/firebase";
 import RouteMap from "./Route";
@@ -18,8 +18,46 @@ import Grid from "@material-ui/core/Grid";
 import { SnackbarProvider } from "notistack";
 import { withGetScreen } from "react-getscreen";
 import DynamicImport from "./utils/lazyImport";
+import CardGiftcardIcon from "@material-ui/icons/CardGiftcard";
+import Badge from "@material-ui/core/Badge";
+import axios from "./utils/axios";
+import styled from "styled-components";
+
+const CustomBadge = styled.div`
+  animation: shake 0.5s;
+  animation-iteration-count: infinite;
+  @keyframes shake {
+    0% {
+      transform: translate(1px, 1px) rotate(0deg);
+    }
+    20% {
+      transform: translate(-3px, 0px) rotate(1deg);
+    }
+    30% {
+      transform: translate(3px, 2px) rotate(0deg);
+    }
+    40% {
+      transform: translate(1px, -1px) rotate(1deg);
+    }
+    60% {
+      transform: translate(-3px, 1px) rotate(0deg);
+    }
+    70% {
+      transform: translate(3px, 1px) rotate(-1deg);
+    }
+    90% {
+      transform: translate(1px, 2px) rotate(0deg);
+    }
+    100% {
+      transform: translate(1px, -2px) rotate(-1deg);
+    }
+  }
+`;
 
 const LoginPage = DynamicImport(() => import("./components/pages/login"));
+const BirthdayList = DynamicImport(() =>
+  import("./components/organisms/birthdayList")
+);
 const Menu = DynamicImport(() => import("./Menu"));
 
 const useStyles = makeStyles(theme => ({
@@ -46,6 +84,25 @@ const theme = createMuiTheme({
 const App = props => {
   const classes = useStyles();
   const [menu, setMenu] = useState(false);
+  const [open, setOpen] = React.useState(false);
+  const [data, setData] = React.useState();
+
+  useEffect(() => {
+    axios
+      .get("student/get-birthday")
+      .then(res => {
+        setData(res.data);
+      })
+      .catch(err => console.log(err));
+  }, []);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
     <GlobalStateProvider>
@@ -85,6 +142,16 @@ const App = props => {
                     <Typography variant="h6" className={classes.title}>
                       Quản lý lớp học
                     </Typography>
+                    {data && data.length > 0 && (
+                      <CustomBadge>
+                        <Badge badgeContent={data.length} color="secondary">
+                          <CardGiftcardIcon
+                            style={{ fontSize: 32, cursor: "pointer" }}
+                            onClick={handleClickOpen}
+                          />
+                        </Badge>
+                      </CustomBadge>
+                    )}
                   </Toolbar>
                 </AppBar>
                 <Grid item xs={12}>
@@ -102,6 +169,7 @@ const App = props => {
                     }}
                   />
                 </Drawer>
+                <BirthdayList open={open} onClose={handleClose} data={data} />
               </div>
             ) : (
               <LoginPage />
