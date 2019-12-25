@@ -43,7 +43,7 @@ export default function AboutUsPage() {
               />
               <CardContent>
                 <Typography gutterBottom variant="h5" component="h2">
-                  Lớp học gia đình siêu nhân
+                  Lớp học Gia đình siêu nhân
                 </Typography>
                 <Typography variant="body2" color="textSecondary" component="p">
                   Địa chỉ: số 8 ngõ 328/34 Lê Trọng Tấn, Thanh Xuân, Hà Nội
@@ -57,7 +57,7 @@ export default function AboutUsPage() {
             <Avatar>H</Avatar>
           </ListItemAvatar>
           <ListItemText
-            primary="cô Hà siêu nhân"
+            primary="Cô Hà siêu nhân"
             secondary={
               <React.Fragment>
                 <Typography
@@ -78,7 +78,7 @@ export default function AboutUsPage() {
             <Avatar>K</Avatar>
           </ListItemAvatar>
           <ListItemText
-            primary="thầy Khoai"
+            primary="Thầy Khoai"
             secondary={
               <React.Fragment>
                 <Typography
