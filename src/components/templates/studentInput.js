@@ -67,6 +67,8 @@ const StudentInput = props => {
   const fFB = useFormInput();
   const address = useFormInput();
   const note = useFormInput();
+  const allergic = useFormInput();
+  const hobby = useFormInput();
   const name = useFormInput();
   const [gender, setGender] = useState(1);
   const [ID, setID] = useState(null);
@@ -103,6 +105,8 @@ const StudentInput = props => {
             tName.setValue(tutor.name);
           }
           note.setValue(student.note);
+          allergic.setValue(student.allergic);
+          hobby.setValue(student.hobby);
           name.setValue(student.name);
         })
         .catch(err =>
@@ -137,6 +141,8 @@ const StudentInput = props => {
     address.setValue("");
     note.setValue("");
     name.setValue("");
+    allergic.setValue("");
+    hobby.setValue("");
     address.setValue("");
   };
 
@@ -160,7 +166,9 @@ const StudentInput = props => {
         fName: fName.value,
         fPhone: fPhone.value,
         fFB: fFB.value,
-        address: address.value
+        address: address.value,
+        allergic: allergic.value,
+        hobby: hobby.value
       })
       .then(res => {
         if (!props.update) {
@@ -326,6 +334,15 @@ const StudentInput = props => {
             }}
           />
         </MuiPickersUtilsProvider>
+        {props.update && (
+          <TextField
+            label="Tuổi"
+            margin="normal"
+            variant="outlined"
+            className={classes.textField}
+            value={moment().diff(selectedDate, "years") + 1}
+          />
+        )}
         <TextField
           className={classes.textField}
           value={fee.value}
@@ -461,33 +478,28 @@ const StudentInput = props => {
             </FormGroup>
           </FormControl>
         </div>
-        <TextField
-          label="Ba mẹ chia sẻ tình trạng cụ thể của con và những điểm lưu ý mà ba mẹ lo lắng?"
-          margin="normal"
-          variant="outlined"
-          className={classes.textField}
-          multiline={true}
-          rows={2}
-          rowsMax={4}
-        />
-        <TextField
-          label="Ba mẹ hãy chia sẻ những việc con làm được? Chưa làm được? Mong muốn của ba mẹ?"
-          margin="normal"
-          variant="outlined"
-          className={classes.textField}
-          multiline={true}
-          rows={2}
-          rowsMax={4}
-        />
-        <TextField
-          label="Ba mẹ có yêu cầu, mong muốn đăng ký học khung giờ nào trong ngày?"
-          margin="normal"
-          variant="outlined"
-          className={classes.textField}
-          multiline={true}
-          rows={2}
-          rowsMax={4}
+       
         /> */}
+        <TextField
+          label="Thông tin dị ứng"
+          margin="normal"
+          variant="outlined"
+          className={classes.textField}
+          multiline={true}
+          rows={2}
+          rowsMax={4}
+          {...allergic}
+        />
+        <TextField
+          label="Thông tin sở thích của trẻ"
+          margin="normal"
+          variant="outlined"
+          className={classes.textField}
+          multiline={true}
+          rows={2}
+          rowsMax={4}
+          {...hobby}
+        />
         <TextField
           label="Ghi chú của cô"
           margin="normal"

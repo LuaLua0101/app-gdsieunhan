@@ -74,6 +74,16 @@ const StudentList = props => {
     return <Chip label={type} size="small" color={"secondary"} />;
   };
 
+  const getBGColor = old => {
+    if (old < 4) {
+      return "#bce672";
+    } else if (old < 6) {
+      return "#9ED900";
+    } else {
+      return "#16A951";
+    }
+  };
+
   return (
     <>
       <Table>
@@ -91,12 +101,18 @@ const StudentList = props => {
             <TableCell>Mã số</TableCell>
             <TableCell>Họ tên</TableCell>
             <TableCell>Tuổi</TableCell>
+            <TableCell>Thời gian</TableCell>
             <TableCell>Xóa</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {students.map(row => (
-            <TableRow key={row.id}>
+            <TableRow
+              key={row.id}
+              style={{
+                backgroundColor: getBGColor(moment().diff(row.dob, "years"))
+              }}
+            >
               <TableCell>{row.sub_id && renderType(row.sub_id)}</TableCell>
               <TableCell
                 onClick={() => props.history.push("/student/" + row.id)}
@@ -104,6 +120,9 @@ const StudentList = props => {
                 {row.name}
               </TableCell>
               <TableCell>{moment().diff(row.dob, "years") + 1}</TableCell>
+              <TableCell>
+                {moment().diff(row.created_at, "months") + 1} tháng
+              </TableCell>
               <TableCell>
                 <DeleteIcon
                   style={{

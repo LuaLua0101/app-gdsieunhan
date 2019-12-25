@@ -401,6 +401,19 @@ const Menu = props => {
           <ListItemIcon>
             <ExitToAppIcon />
           </ListItemIcon>
+          <ListItemText
+            primary="Liên hệ"
+            onClick={() => {
+              props.close();
+              props.history.push("/about-us");
+            }}
+          />
+        </ListItem>
+        <Divider />
+        <ListItem style={{ cursor: "pointer" }}>
+          <ListItemIcon>
+            <ExitToAppIcon />
+          </ListItemIcon>
           <ListItemText primary="Đăng xuất" onClick={logout} />
         </ListItem>
       </List>
