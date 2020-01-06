@@ -99,10 +99,7 @@ const colors = [
   "#74cdd5",
   "#9bd6de",
   "#d0eaeb",
-  "#ee1161",
-  "#f1639f",
-  "#f387b8",
-  "#f8b9d8"
+  "#d0eadc"
 ];
 
 const icons = group => {

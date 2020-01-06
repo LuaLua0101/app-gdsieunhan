@@ -85,6 +85,16 @@ const SkillGroupList = props => {
     ) : null;
   };
 
+  const renderType2 = type => {
+    return (
+      <Chip
+        label={type === 1 ? "Kế hoạch" : "Khảo sát"}
+        size="small"
+        color={type === 1 ? "secondary" : "primary"}
+      />
+    );
+  };
+
   return (
     <>
       <Table>
@@ -101,6 +111,7 @@ const SkillGroupList = props => {
           <TableRow>
             <TableCell>Phân loại</TableCell>
             <TableCell>Mặt phát triển</TableCell>
+            <TableCell>Loại</TableCell>
             <TableCell>Xóa</TableCell>
           </TableRow>
         </TableHead>
@@ -114,6 +125,7 @@ const SkillGroupList = props => {
               >
                 {row.name}
               </TableCell>
+              <TableCell>{renderType2(row.type)}</TableCell>
               <TableCell>
                 <DeleteIcon
                   style={{

@@ -42,6 +42,7 @@ const SkillGroupInput = props => {
   const classes = useStyles();
   const name = useFormInput();
   const [type, setType] = useState(1);
+  const [type2, setType2] = useState(1);
   const [ID, setID] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -55,6 +56,7 @@ const SkillGroupInput = props => {
           setID(skill.id);
           name.setValue(skill.name);
           setType(skill.group_type_id);
+          setType2(skill.type ? skill.type : 0);
         })
         .catch(err =>
           enqueueSnackbar(err.message, {
@@ -67,6 +69,10 @@ const SkillGroupInput = props => {
 
   const handleChangeType = event => {
     setType(parseInt(event.target.value));
+  };
+
+  const handleChangeType2 = event => {
+    setType2(parseInt(event.target.value));
   };
 
   const clear = () => {
@@ -125,6 +131,20 @@ const SkillGroupInput = props => {
             labelPlacement="start"
             label="Thang hành vi"
             value={0}
+            control={<Radio />}
+          />
+        </RadioGroup>
+        <RadioGroup value={type2} onChange={handleChangeType2} row>
+          <FormControlLabel
+            labelPlacement="start"
+            label="Bảng khảo sát"
+            value={0}
+            control={<Radio />}
+          />
+          <FormControlLabel
+            labelPlacement="start"
+            label="Bảng kế hoạch"
+            value={1}
             control={<Radio />}
           />
         </RadioGroup>

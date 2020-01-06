@@ -18,18 +18,6 @@ import Box from "@material-ui/core/Box";
 import { withRouter } from "react-router";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 
-import SortByAlphaIcon from "@material-ui/icons/SortByAlpha";
-import DirectionsRunIcon from "@material-ui/icons/DirectionsRun";
-import FaceIcon from "@material-ui/icons/Face";
-import EmojiPeopleIcon from "@material-ui/icons/EmojiPeople";
-import FontDownloadIcon from "@material-ui/icons/FontDownload";
-import HeadsetMicIcon from "@material-ui/icons/HeadsetMic";
-import HearingIcon from "@material-ui/icons/Hearing";
-import FilterVintageIcon from "@material-ui/icons/FilterVintage";
-import LeakAddIcon from "@material-ui/icons/LeakAdd";
-import LocalFloristIcon from "@material-ui/icons/LocalFlorist";
-import PoolIcon from "@material-ui/icons/Pool";
-
 const SurveySkillList = DynamicImport(() =>
   import("../organisms/surveySkillList")
 );
@@ -107,32 +95,7 @@ const colors = [
 ];
 
 const icons = group => {
-  switch (group) {
-    case "Ngôn ngữ":
-      return <SortByAlphaIcon fontSize="inherit" />;
-    case "Cảm giác & vận động":
-      return <DirectionsRunIcon fontSize="inherit" />;
-    case "Chơi & quan tâm vật liệu chơi":
-      return <FaceIcon fontSize="inherit" />;
-    case "Quan hệ & ảnh hưởng":
-      return <EmojiPeopleIcon fontSize="inherit" />;
-    case "Nhận thức ngôn ngữ":
-      return <FontDownloadIcon fontSize="inherit" />;
-    case "Nhận thức thể hiện":
-      return <HeadsetMicIcon fontSize="inherit" />;
-    case "Phối hợp tay mắt":
-      return <HearingIcon fontSize="inherit" />;
-    case "Vận động tinh":
-      return <FilterVintageIcon fontSize="inherit" />;
-    case "Bắt chước":
-      return <LeakAddIcon fontSize="inherit" />;
-    case "Tri giác":
-      return <LocalFloristIcon fontSize="inherit" />;
-    case "Vận động thô":
-      return <PoolIcon fontSize="inherit" />;
-    default:
-      return <SortByAlphaIcon fontSize="inherit" />;
-  }
+  return <FavoriteIcon fontSize="inherit" />;
 };
 
 const SurveyList = props => {

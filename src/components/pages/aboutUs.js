@@ -25,14 +25,20 @@ const useStyles = makeStyles(theme => ({
   card: {}
 }));
 
-export default function AboutUsPage() {
+export default function AboutUsPage(props) {
   const classes = useStyles();
 
   return (
     <>
       <List className={classes.root}>
         <ListItem alignItems="flex-start">
-          <Card className={classes.card}>
+          <Card
+            className={classes.card}
+            onClick={() =>
+              (window.location.href =
+                "https://www.facebook.com/groups/1510577542373186/")
+            }
+          >
             <CardActionArea>
               <CardMedia
                 component="img"
@@ -53,11 +59,35 @@ export default function AboutUsPage() {
           </Card>
         </ListItem>
         <ListItem alignItems="flex-start">
+          <Card
+            className={classes.card}
+            onClick={() =>
+              (window.location.href =
+                "https://www.facebook.com/groups/1980827895577397/")
+            }
+          >
+            <CardActionArea>
+              <CardMedia
+                component="img"
+                alt="Contemplative Reptile"
+                height="140"
+                image={window.location.origin + "/langtre.jpg"}
+                title="Contemplative Reptile"
+              />
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="h2">
+                  Làng Trẻ
+                </Typography>
+              </CardContent>
+            </CardActionArea>
+          </Card>
+        </ListItem>
+        <ListItem alignItems="flex-start">
           <ListItemAvatar>
             <Avatar>H</Avatar>
           </ListItemAvatar>
           <ListItemText
-            primary="Cô Hà siêu nhân"
+            primary={<b>Cô Hà siêu nhân</b>}
             secondary={
               <React.Fragment>
                 <Typography
@@ -66,7 +96,7 @@ export default function AboutUsPage() {
                   className={classes.inline}
                   color="textPrimary"
                 >
-                  034.965.0088
+                  <b>034.965.0088</b>
                 </Typography>
               </React.Fragment>
             }
