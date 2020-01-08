@@ -38,11 +38,17 @@ const SkillsPage = DynamicImport(() => import("./components/pages/skills"));
 const SkillGroupsPage = DynamicImport(() =>
   import("./components/pages/skillGroups")
 );
+const SkillTypesPage = DynamicImport(() =>
+  import("./components/pages/skillTypes")
+);
 const SkillDetailPage = DynamicImport(() =>
   import("./components/pages/skillDetail")
 );
 const SkillGroupsDetailPage = DynamicImport(() =>
   import("./components/pages/skillGroupDetail")
+);
+const SkillTypesDetailPage = DynamicImport(() =>
+  import("./components/pages/skillTypeDetail")
 );
 const AboutUsPage = DynamicImport(() => import("./components/pages/aboutUs"));
 
@@ -69,9 +75,11 @@ const RouteMap = () => {
       <Route exact path="/teacher/:id" component={TeacherDetailPage} />
       <Route exact path="/user/:id" component={UserDetailPage} />
       <Route exact path="/skills" component={SkillsPage} />
-      <Route exact path="/skill-groups" component={SkillGroupsPage} />
       <Route exact path="/skill/:id" component={SkillDetailPage} />
+      <Route exact path="/skill-groups" component={SkillGroupsPage} />
       <Route exact path="/skill-group/:id" component={SkillGroupsDetailPage} />
+      <Route exact path="/skill-types" component={SkillTypesPage} />
+      <Route exact path="/skill-type/:id" component={SkillTypesDetailPage} />
       <Route exact path="/about-us" component={AboutUsPage} />
       <Route component={NotFoundPage} />
     </Switch>

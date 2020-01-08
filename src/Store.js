@@ -10,6 +10,7 @@ const initialState = {
   users: [],
   timekeeping: [],
   skillGroups: [],
+  skillTypes: [],
   skills: []
 };
 

@@ -6,6 +6,7 @@ import teachers from "./teachers";
 import users from "./users";
 import timekeeping from "./timekeeping";
 import skillGroups from "./skillGroups";
+import skillTypes from "./skillTypes";
 import skills from "./skills";
 
 const reducer = combineReducers({
@@ -16,6 +17,7 @@ const reducer = combineReducers({
   users: users,
   timekeeping: timekeeping,
   skillGroups: skillGroups,
+  skillTypes: skillTypes,
   skills: skills
 });
 

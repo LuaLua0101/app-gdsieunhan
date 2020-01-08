@@ -384,6 +384,18 @@ const Menu = props => {
                     <GroupIcon />
                   </ListItemIcon>
                   <ListItemText
+                    primary="DS nhóm kỹ năng"
+                    onClick={() => {
+                      props.close();
+                      props.history.push("/skill-types");
+                    }}
+                  />
+                </ListItem>
+                <ListItem button className={classes.nested2}>
+                  <ListItemIcon>
+                    <GroupIcon />
+                  </ListItemIcon>
+                  <ListItemText
                     primary="Danh sách kỹ năng"
                     onClick={() => {
                       props.close();

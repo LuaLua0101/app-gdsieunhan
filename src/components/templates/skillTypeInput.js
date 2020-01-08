@@ -4,15 +4,15 @@ import TextField from "@material-ui/core/TextField";
 import Fab from "@material-ui/core/Fab";
 import NavigationIcon from "@material-ui/icons/Done";
 import useFormInput from "../../utils/useFormInput";
-import useFormDropdown from "../../utils/useFormDropdown";
 import { useSnackbar } from "notistack";
-import axios from "../../utils/axios";
-import { dispatch } from "../../Store";
-import { withRouter } from "react-router";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
+import axios from "../../utils/axios";
+import { dispatch } from "../../Store";
+import { withRouter } from "react-router";
 import Select from "@material-ui/core/Select";
+import useFormDropdown from "../../utils/useFormDropdown";
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -39,16 +39,14 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const SkillInput = props => {
+const SkillTypeInput = props => {
   const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();
-  const content = useFormInput();
-  const group = useFormDropdown();
-  const type = useFormDropdown();
-  const [ID, setID] = useState();
+  const name = useFormInput();
+  const [ID, setID] = useState(null);
   const [loading, setLoading] = useState(false);
+  const group = useFormDropdown();
   const [skillGroups, setSkillGroups] = useState();
-  const [skillTypes, setSkillTypes] = useState();
   const inputLabel = React.useRef(null);
   const [labelWidth, setLabelWidth] = useState(0);
 
@@ -56,12 +54,13 @@ const SkillInput = props => {
     if (props.update) {
       setLoading(true);
       axios
-        .post("skill/detail", { id: parseInt(props.match.params.id) })
+        .post("skill-type/detail", { id: parseInt(props.match.params.id) })
         .then(res => {
           const { skill } = res.data;
+          console.log(res.data);
           setID(skill.id);
-          content.setValue(skill.content);
-          group.setValue(skill.group_id);
+          name.setValue(skill.name);
+          group.setValue(skill.group_type);
         })
         .catch(err =>
           enqueueSnackbar(err.message, {
@@ -82,45 +81,30 @@ const SkillInput = props => {
       );
   }, []);
 
-  const loadTypes = type => {
-    axios
-      .post("skill-type/list-by", {
-        type: type
-      })
-      .then(res => {
-        setSkillTypes(res.data);
-      })
-      .catch(err =>
-        enqueueSnackbar(err.message, {
-          variant: "error"
-        })
-      );
-  };
-
   const clear = () => {
-    content.setValue("");
+    name.setValue("");
   };
 
-  const addTeacher = () => {
+  const addSkillType = () => {
     setLoading(true);
     axios
-      .post(props.update ? "skill/update" : "skill/add", {
+      .post(props.update ? "skill-type/update" : "skill-type/add", {
         id: props.update ? ID : null,
-        content: content.value,
-        group: group.value
+        name: name.value,
+        type: group.value
       })
       .then(res => {
         if (!props.update) {
-          const _group = skillGroups.find(item => {
-            return item.id === group.value;
-          });
           dispatch({
-            type: "add_skills",
-            skills: [
+            type: "add_skill_types",
+            skill_types: [
               {
                 id: res.data.id,
-                content: content.value,
-                name: _group.name
+                name: name.value,
+                group_type_id: group.value,
+                gname: skillGroups.find(element => {
+                  return element.id == group.value;
+                }).name
               }
             ]
           });
@@ -132,7 +116,7 @@ const SkillInput = props => {
             : "Xác nhận thêm thành công!",
           { variant: "success" }
         );
-        props.update && props.history.push("/skills");
+        props.update && props.history.push("/skill-types");
       })
       .catch(err =>
         enqueueSnackbar(err.message, {
@@ -154,11 +138,6 @@ const SkillInput = props => {
             id="demo-simple-select-outlined"
             {...group}
             labelWidth={labelWidth}
-            onChange={e => {
-              const selected = e.target.value;
-              group.setValue(selected);
-              loadTypes(selected);
-            }}
           >
             {skillGroups &&
               skillGroups.map((item, index) => (
@@ -168,32 +147,12 @@ const SkillInput = props => {
               ))}
           </Select>
         </FormControl>
-        <FormControl variant="outlined" className={classes.formControl}>
-          <InputLabel ref={inputLabel} id="demo-simple-select-outlined-label">
-            Chọn nhóm kỹ năng
-          </InputLabel>
-          <Select
-            labelId="demo-simple-select-outlined-label"
-            id="demo-simple-select-outlined"
-            {...type}
-            labelWidth={labelWidth}
-          >
-            {skillTypes &&
-              skillTypes.map((item, index) => (
-                <MenuItem key={index} value={item.id}>
-                  {item.name}
-                </MenuItem>
-              ))}
-          </Select>
-        </FormControl>
         <TextField
-          label="Kỹ năng"
+          label="Nhóm kỹ năng"
           margin="normal"
           variant="outlined"
           className={classes.textField}
-          {...content}
-          rows="4"
-          multiline
+          {...name}
         />
         <Fab
           variant="extended"
@@ -208,14 +167,14 @@ const SkillInput = props => {
             color: "#fbfefe",
             boxShadow: "none"
           }}
-          onClick={addTeacher}
+          onClick={addSkillType}
         >
           <NavigationIcon className={classes.extendedIcon} />
-          {props.update ? "Sửa kỹ năng" : "Thêm kỹ năng"}
+          {props.update ? "Sửa nhóm kỹ năng" : "Thêm nhóm kỹ năng"}
         </Fab>
       </form>
     </>
   );
 };
 
-export default withRouter(SkillInput);
+export default withRouter(SkillTypeInput);
