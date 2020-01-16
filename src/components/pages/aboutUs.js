@@ -9,10 +9,11 @@ import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
-import CardActions from "@material-ui/core/CardActions";
+import TextField from "@material-ui/core/TextField";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
-import Button from "@material-ui/core/Button";
+import Fab from "@material-ui/core/Fab";
+import useFormInput from "../../utils/useFormInput";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -27,6 +28,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function AboutUsPage(props) {
   const classes = useStyles();
+  const feedback = useFormInput();
 
   return (
     <>
@@ -122,6 +124,38 @@ export default function AboutUsPage(props) {
               </React.Fragment>
             }
           />
+        </ListItem>
+        <Divider variant="inset" component="li" />
+        <ListItem alignItems="flex-start">
+          <TextField
+            label="Feedback của phụ huynh"
+            margin="normal"
+            variant="outlined"
+            style={{ width: "100%" }}
+            className={classes.textField}
+            multiline={true}
+            rows={4}
+            rowsMax={4}
+            {...feedback}
+          />
+        </ListItem>
+        <ListItem alignItems="flex-start">
+          <Fab
+            variant="extended"
+            size="medium"
+            color="primary"
+            aria-label="add"
+            className={classes.margin}
+            style={{
+              backgroundColor: "#44cbdf",
+              backgroundImage:
+                "linear-gradient(141deg,  #44cbdf 15%, #01ca7c 85%)",
+              color: "#fbfefe",
+              boxShadow: "none"
+            }}
+          >
+            Gửi feedback
+          </Fab>
         </ListItem>
       </List>
     </>

@@ -23,6 +23,7 @@ import PersonIcon from "@material-ui/icons/Person";
 import PeopleOutlineIcon from "@material-ui/icons/PeopleOutline";
 import FaceIcon from "@material-ui/icons/Face";
 import axios from "./utils/axios";
+import CallIcon from "@material-ui/icons/Call";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -411,7 +412,7 @@ const Menu = props => {
         <Divider />
         <ListItem style={{ cursor: "pointer" }}>
           <ListItemIcon>
-            <ExitToAppIcon />
+            <CallIcon />
           </ListItemIcon>
           <ListItemText
             primary="Liên hệ"
