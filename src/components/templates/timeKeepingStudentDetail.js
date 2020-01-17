@@ -19,6 +19,8 @@ import { useSnackbar } from "notistack";
 import Grid from "@material-ui/core/Grid";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import TextField from "@material-ui/core/TextField";
+import LocalHospitalIcon from "@material-ui/icons/LocalHospital";
+import MenuBookIcon from "@material-ui/icons/MenuBook";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -28,6 +30,14 @@ const TimeKeepingStudentDetail = props => {
   const [open, setOpen] = useState(false);
   const [tID, setTID] = useState(null);
   const [data, setData] = useState(null);
+  const [currentExercise, setCurrentExercise] = useState({
+    data: null,
+    open: false
+  });
+  const [currentHealthCheck, setCurrentHealthCheck] = useState({
+    data: null,
+    open: false
+  });
   const [loading, setLoading] = useState(false);
   const [timekeeping] = useGlobalState("timekeeping");
   const { enqueueSnackbar } = useSnackbar();
@@ -144,6 +154,34 @@ const TimeKeepingStudentDetail = props => {
     }
   };
 
+  const displayHealthCheck = index => {
+    setCurrentHealthCheck({
+      data: data.list.find(x => x.id === index).health_check,
+      open: true
+    });
+  };
+
+  const displayExercise = index => {
+    setCurrentExercise({
+      data: data.list.find(x => x.id === index).exercise,
+      open: true
+    });
+  };
+
+  const handleCloseHealth = () => {
+    setCurrentHealthCheck({
+      ...currentHealthCheck,
+      open: false
+    });
+  };
+
+  const handleCloseEx = () => {
+    setCurrentExercise({
+      ...currentExercise,
+      open: false
+    });
+  };
+
   return (
     <>
       <Table>
@@ -161,6 +199,8 @@ const TimeKeepingStudentDetail = props => {
             <TableCell>Ngày</TableCell>
             <TableCell>In/Out</TableCell>
             <TableCell></TableCell>
+            <TableCell>T.t sức khỏe</TableCell>
+            <TableCell>B.tập</TableCell>
             {/* <TableCell>Điểm danh</TableCell>
             <TableCell>Điều chỉnh thời gian</TableCell> */}
           </TableRow>
@@ -197,6 +237,26 @@ const TimeKeepingStudentDetail = props => {
                   {row &&
                     row.checkin &&
                     renderStatus(row.checkin, row.checkout)}
+                </TableCell>
+                <TableCell>
+                  <LocalHospitalIcon
+                    style={{
+                      color: "red",
+                      cursor: "pointer",
+                      fontSize: 30
+                    }}
+                    onClick={() => displayHealthCheck(row.id)}
+                  />
+                </TableCell>
+                <TableCell>
+                  <MenuBookIcon
+                    style={{
+                      color: "red",
+                      cursor: "pointer",
+                      fontSize: 30
+                    }}
+                    onClick={() => displayExercise(row.id)}
+                  />
                 </TableCell>
                 {/* <TableCell>
                   {row && row.checkin ? (
@@ -240,121 +300,178 @@ const TimeKeepingStudentDetail = props => {
         </TableBody>
       </Table>
       {tID && (
-        <Dialog
-          open={open}
-          TransitionComponent={Transition}
-          keepMounted
-          onClose={handleClose}
-          aria-labelledby="alert-dialog-slide-title"
-          aria-describedby="alert-dialog-slide-description"
-        >
-          <DialogTitle id="alert-dialog-slide-title">
-            Thay đổi giờ vào/ra
-          </DialogTitle>
-          <DialogContent>
-            <Grid container spacing={3}>
-              <Grid item xs={6} sm={6}>
-                <TextField
-                  label="Thời gian checkin"
-                  margin="normal"
-                  type="number"
-                  variant="outlined"
-                  value={tID.checkin.split(":")[0]}
-                  onChange={e => {
-                    const value = parseInt(e.target.value);
-                    if (value >= 0 && value < 25) {
-                      setTID({
-                        ...tID,
-                        checkin: value + ":" + tID.checkin.split(":")[1]
-                      });
-                    }
-                  }}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">Giờ </InputAdornment>
-                    )
-                  }}
-                />
+        <>
+          <Dialog
+            open={open}
+            TransitionComponent={Transition}
+            keepMounted
+            onClose={handleClose}
+            aria-labelledby="alert-dialog-slide-title"
+            aria-describedby="alert-dialog-slide-description"
+          >
+            <DialogTitle id="alert-dialog-slide-title">
+              Thay đổi giờ vào/ra
+            </DialogTitle>
+            <DialogContent>
+              <Grid container spacing={3}>
+                <Grid item xs={6} sm={6}>
+                  <TextField
+                    label="Thời gian checkin"
+                    margin="normal"
+                    type="number"
+                    variant="outlined"
+                    value={tID.checkin.split(":")[0]}
+                    onChange={e => {
+                      const value = parseInt(e.target.value);
+                      if (value >= 0 && value < 25) {
+                        setTID({
+                          ...tID,
+                          checkin: value + ":" + tID.checkin.split(":")[1]
+                        });
+                      }
+                    }}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">Giờ </InputAdornment>
+                      )
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={6} sm={6}>
+                  <TextField
+                    margin="normal"
+                    type="number"
+                    variant="outlined"
+                    value={tID.checkin.split(":")[1]}
+                    onChange={e => {
+                      const value = parseInt(e.target.value);
+                      if (value >= 0 && value < 60) {
+                        setTID({
+                          ...tID,
+                          checkin: tID.checkin.split(":")[0] + ":" + value
+                        });
+                      }
+                    }}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">Phút </InputAdornment>
+                      )
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={6} sm={6}>
+                  <TextField
+                    label="Thời gian checkout"
+                    margin="normal"
+                    type="number"
+                    variant="outlined"
+                    value={tID.checkout.split(":")[0]}
+                    onChange={e => {
+                      const value = parseInt(e.target.value);
+                      if (value >= 0 && value < 25) {
+                        setTID({
+                          ...tID,
+                          checkout: value + ":" + tID.checkout.split(":")[1]
+                        });
+                      }
+                    }}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">Giờ </InputAdornment>
+                      )
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={6} sm={6}>
+                  <TextField
+                    margin="normal"
+                    type="number"
+                    variant="outlined"
+                    value={tID.checkout.split(":")[1]}
+                    onChange={e => {
+                      const value = parseInt(e.target.value);
+                      if (value >= 0 && value < 60) {
+                        setTID({
+                          ...tID,
+                          checkout: tID.checkout.split(":")[0] + ":" + value
+                        });
+                      }
+                    }}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">Phút </InputAdornment>
+                      )
+                    }}
+                  />
+                </Grid>
               </Grid>
-              <Grid item xs={6} sm={6}>
-                <TextField
-                  margin="normal"
-                  type="number"
-                  variant="outlined"
-                  value={tID.checkin.split(":")[1]}
-                  onChange={e => {
-                    const value = parseInt(e.target.value);
-                    if (value >= 0 && value < 60) {
-                      setTID({
-                        ...tID,
-                        checkin: tID.checkin.split(":")[0] + ":" + value
-                      });
-                    }
-                  }}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">Phút </InputAdornment>
-                    )
-                  }}
-                />
-              </Grid>
-              <Grid item xs={6} sm={6}>
-                <TextField
-                  label="Thời gian checkout"
-                  margin="normal"
-                  type="number"
-                  variant="outlined"
-                  value={tID.checkout.split(":")[0]}
-                  onChange={e => {
-                    const value = parseInt(e.target.value);
-                    if (value >= 0 && value < 25) {
-                      setTID({
-                        ...tID,
-                        checkout: value + ":" + tID.checkout.split(":")[1]
-                      });
-                    }
-                  }}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">Giờ </InputAdornment>
-                    )
-                  }}
-                />
-              </Grid>
-              <Grid item xs={6} sm={6}>
-                <TextField
-                  margin="normal"
-                  type="number"
-                  variant="outlined"
-                  value={tID.checkout.split(":")[1]}
-                  onChange={e => {
-                    const value = parseInt(e.target.value);
-                    if (value >= 0 && value < 60) {
-                      setTID({
-                        ...tID,
-                        checkout: tID.checkout.split(":")[0] + ":" + value
-                      });
-                    }
-                  }}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">Phút </InputAdornment>
-                    )
-                  }}
-                />
-              </Grid>
-            </Grid>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose} color="primary">
-              Hủy
-            </Button>
-            <Button onClick={handleOk} color="primary">
-              Thay đổi
-            </Button>
-          </DialogActions>
-        </Dialog>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose} color="primary">
+                Hủy
+              </Button>
+              <Button onClick={handleOk} color="primary">
+                Thay đổi
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </>
       )}
+      <Dialog
+        fullWidth
+        open={currentHealthCheck.open}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleCloseHealth}
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle id="alert-dialog-slide-title">
+          Tình trạng sức khỏe
+        </DialogTitle>
+        <DialogContent>
+          <TextField
+            margin="normal"
+            variant="outlined"
+            style={{ width: "100%" }}
+            multiline={true}
+            rows={4}
+            value={currentHealthCheck.data}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseHealth} color="primary">
+            Đóng
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        fullWidth
+        open={currentExercise.open}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleCloseEx}
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle id="alert-dialog-slide-title">Bài tập về nhà</DialogTitle>
+        <DialogContent>
+          <TextField
+            margin="normal"
+            variant="outlined"
+            style={{ width: "100%" }}
+            multiline={true}
+            rows={4}
+            value={currentExercise.data}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseEx} color="primary">
+            Đóng
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };

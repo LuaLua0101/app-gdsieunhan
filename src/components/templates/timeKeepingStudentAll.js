@@ -22,6 +22,7 @@ import Grid from "@material-ui/core/Grid";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import TextField from "@material-ui/core/TextField";
 import LocalHospitalIcon from "@material-ui/icons/LocalHospital";
+import MenuBookIcon from "@material-ui/icons/MenuBook";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -30,6 +31,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const TimeKeepingStudentAll = props => {
   const [open, setOpen] = useState(false);
   const [openHealth, setOpenHealth] = useState(false);
+  const [openEx, setOpenEx] = useState(false);
   const [tID, setTID] = useState(null);
   const [loading, setLoading] = useState(false);
   const [timekeeping] = useGlobalState("timekeeping");
@@ -69,12 +71,26 @@ const TimeKeepingStudentAll = props => {
     setOpenHealth(true);
   };
 
+  const editEx = (id, checkin, checkout, exercise) => {
+    setTID({
+      id,
+      checkin,
+      checkout,
+      exercise
+    });
+    setOpenEx(true);
+  };
+
   const handleClose = () => {
     setOpen(false);
   };
 
   const handleCloseHealth = () => {
     setOpenHealth(false);
+  };
+
+  const handleCloseEx = () => {
+    setOpenEx(false);
   };
 
   const addCheckin = id => {
@@ -151,7 +167,7 @@ const TimeKeepingStudentAll = props => {
     axios
       .post("student/update-health", {
         id: tID.id,
-        note: tID.health_check
+        health_check: tID.health_check
       })
       .then(res => {
         dispatch({
@@ -160,6 +176,29 @@ const TimeKeepingStudentAll = props => {
           ...tID
         });
         setOpenHealth(false);
+        enqueueSnackbar("Xác nhận thay đổi", { variant: "success" });
+      })
+      .catch(err =>
+        enqueueSnackbar(err.message, {
+          variant: "error"
+        })
+      )
+      .finally(() => setOpen(false));
+  };
+
+  const handleOkEx = () => {
+    axios
+      .post("student/update-exercise", {
+        id: tID.id,
+        exercise: tID.exercise
+      })
+      .then(res => {
+        dispatch({
+          type: "edit_timekeeping",
+          id: tID.id,
+          ...tID
+        });
+        setOpenEx(false);
         enqueueSnackbar("Xác nhận thay đổi", { variant: "success" });
       })
       .catch(err =>
@@ -189,6 +228,7 @@ const TimeKeepingStudentAll = props => {
             <TableCell>Điểm danh</TableCell>
             <TableCell>Điều chỉnh thời gian</TableCell>
             <TableCell>T.t sức khỏe</TableCell>
+            <TableCell>B.tập</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -263,6 +303,25 @@ const TimeKeepingStudentAll = props => {
                         row.checkin.checkin,
                         row.checkin.checkout,
                         row.checkin.health_check
+                      )
+                    }
+                  />
+                )}
+              </TableCell>
+              <TableCell>
+                {row.checkin && (
+                  <MenuBookIcon
+                    style={{
+                      color: "red",
+                      cursor: "pointer",
+                      fontSize: 30
+                    }}
+                    onClick={() =>
+                      editEx(
+                        row.checkin.tid,
+                        row.checkin.checkin,
+                        row.checkin.checkout,
+                        row.checkin.exercise
                       )
                     }
                   />
@@ -428,6 +487,49 @@ const TimeKeepingStudentAll = props => {
                   Hủy
                 </Button>
                 <Button onClick={handleOkHealth} color="primary">
+                  Cập nhật
+                </Button>
+              </DialogActions>
+            </Dialog>
+          )}
+
+          {openEx && (
+            <Dialog
+              fullWidth
+              open={openEx}
+              TransitionComponent={Transition}
+              keepMounted
+              onClose={handleCloseEx}
+              aria-labelledby="alert-dialog-slide-title"
+              aria-describedby="alert-dialog-slide-description"
+            >
+              <DialogTitle id="alert-dialog-slide-title">
+                Bài tập về nhà
+              </DialogTitle>
+              <DialogContent>
+                <TextField
+                  label="Bài tập về nhà"
+                  margin="normal"
+                  variant="outlined"
+                  style={{ width: "100%" }}
+                  multiline={true}
+                  rows={4}
+                  rowsMax={4}
+                  value={tID.exercise}
+                  onChange={e => {
+                    const value = e.target.value;
+                    setTID({
+                      ...tID,
+                      exercise: value
+                    });
+                  }}
+                />
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleCloseEx} color="primary">
+                  Hủy
+                </Button>
+                <Button onClick={handleOkEx} color="primary">
                   Cập nhật
                 </Button>
               </DialogActions>

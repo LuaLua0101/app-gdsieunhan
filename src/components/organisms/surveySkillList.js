@@ -40,15 +40,19 @@ export default function SurveySkillList(props) {
       <TableBody>
         {data &&
           data.map((item, index) => (
-            <TableRow
-              key={index}
-              style={{ cursor: "pointer" }}
-              onClick={() => props.open(props.group, item, index + 1)}
-            >
-              <TableCell>{index + 1}</TableCell>
-              <TableCell>{item.content}</TableCell>
-              <TableCell>{item.rate ? item.rate : 0}</TableCell>
-            </TableRow>
+            <>
+              <TableRow
+                key={index}
+                style={{ cursor: "pointer" }}
+                onClick={() =>
+                  props.open(props.group, item, index + 1, item.name)
+                }
+              >
+                <TableCell>{index + 1}</TableCell>
+                <TableCell>{item.content}</TableCell>
+                <TableCell>{item.rate ? item.rate : 0}</TableCell>
+              </TableRow>
+            </>
           ))}
       </TableBody>
     </Table>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -14,6 +14,8 @@ import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Fab from "@material-ui/core/Fab";
 import useFormInput from "../../utils/useFormInput";
+import axios from "../../utils/axios";
+import { useSnackbar } from "notistack";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -29,6 +31,33 @@ const useStyles = makeStyles(theme => ({
 export default function AboutUsPage(props) {
   const classes = useStyles();
   const feedback = useFormInput();
+  const { enqueueSnackbar } = useSnackbar();
+
+  useEffect(() => {
+    axios
+      .get("user/feedback")
+      .then(res => {
+        feedback.setValue(res.data.feedback);
+      })
+      .catch();
+  }, []);
+
+  const updateFeedback = () => {
+    axios
+      .post("user/update-feedback", {
+        feedback: feedback.value
+      })
+      .then(res => {
+        enqueueSnackbar("Cập nhật thành công", {
+          variant: "success"
+        });
+      })
+      .catch(e =>
+        enqueueSnackbar("Lỗi cập nhật thông tin", {
+          variant: "error"
+        })
+      );
+  };
 
   return (
     <>
@@ -153,6 +182,7 @@ export default function AboutUsPage(props) {
               color: "#fbfefe",
               boxShadow: "none"
             }}
+            onClick={updateFeedback}
           >
             Gửi feedback
           </Fab>

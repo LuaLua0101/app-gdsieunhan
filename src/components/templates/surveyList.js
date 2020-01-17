@@ -152,11 +152,12 @@ const SurveyList = props => {
       );
   };
 
-  const setOpenDetailDrawer = (group, skill, index) => {
+  const setOpenDetailDrawer = (group, skill, index, type) => {
     setSelectedSkill({
       group,
       skill,
-      index
+      index,
+      type
     });
     setOpenDetail(true);
   };
@@ -197,6 +198,7 @@ const SurveyList = props => {
               </Typography>
               <Typography variant="h5" component="h5">
                 ({selectedSkill.group})
+                {selectedSkill.type && <>> ({selectedSkill.type})</>}
               </Typography>
               <Typography component="p">
                 {selectedSkill.skill.content}
